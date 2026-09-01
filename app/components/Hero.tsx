@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import { useI18n } from "../providers/I18nProvider";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Sparkles,
   Download,
@@ -17,7 +16,6 @@ import { WindowsIcon } from "../icons/WindwosIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { useTheme } from "../providers/ThemeProvider";
 import ArtText from "./arts/ArtText";
-
 // Platform configuration with download details - one file per platform
 const platformConfig = {
   windows: {
@@ -33,11 +31,9 @@ const platformConfig = {
     icon: <LinuxIcon className="w-4 h-4" />,
   },
 };
-
 // GitHub repository URL
 const GITHUB_REPO = "https://github.com/HippoxHQ/hippoxOS";
 const GITHUB_API = "https://api.github.com/repos/HippoxHQ/hippoxOS";
-
 export default function Hero() {
   const { locale } = useI18n();
   const { theme } = useTheme();
@@ -55,7 +51,7 @@ export default function Hero() {
   });
   const [version, setVersion] = useState<string>("0.0.0");
   const [loading, setLoading] = useState(true);
-
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   // Fetch GitHub repository data
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -69,8 +65,6 @@ export default function Hero() {
             forks: data.forks_count?.toLocaleString() || "0",
           });
         }
-
-        // Fetch latest release version from tags
         const tagsResponse = await fetch(
           "https://api.github.com/repos/HippoxHQ/hippoxOS/tags",
         );
@@ -87,13 +81,150 @@ export default function Hero() {
         setLoading(false);
       }
     };
-
     fetchGitHubData();
   }, []);
-
+  // Shooting star / light streak animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 0);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 0);
+    // Shooting star particles
+    interface Star {
+      x: number;
+      y: number;
+      speed: number;
+      length: number;
+      opacity: number;
+      width: number;
+      angle: number;
+      active: boolean;
+    }
+    const stars: Star[] = [];
+    const numStars = 6;
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: -50 - Math.random() * 300,
+        y: Math.random() * height * 0.7,
+        speed: 5 + Math.random() * 4,
+        length: 80 + Math.random() * 150,
+        opacity: 0.3 + Math.random() * 0.5,
+        width: 1 + Math.random() * 1.5,
+        angle: 0.1 + Math.random() * 0.15,
+        active: i < 2,
+      });
+    }
+    let time = 0;
+    let animationId: number;
+    const animate = () => {
+      time++;
+      ctx.clearRect(0, 0, width, height);
+      for (const star of stars) {
+        if (!star.active) {
+          // 5% chance to activate each frame when not active
+          if (Math.random() < 0.05) {
+            star.active = true;
+            star.x = -50 - Math.random() * 200;
+            star.y = 10 + Math.random() * height * 0.6;
+            star.speed = 5 + Math.random() * 5;
+            star.length = 80 + Math.random() * 180;
+            star.opacity = 0.3 + Math.random() * 0.5;
+            star.angle = 0.08 + Math.random() * 0.15;
+          }
+          continue;
+        }
+        // Move star from left to right with slight downward angle
+        star.x += star.speed;
+        star.y += star.speed * star.angle;
+        // Deactivate when off screen
+        if (star.x > width + 200 || star.y > height + 100) {
+          star.active = false;
+          continue;
+        }
+        // Calculate gradient along the trail
+        const white = isDark ? 255 : 0;
+        const grad = ctx.createLinearGradient(
+          star.x - star.length,
+          star.y - star.length * star.angle,
+          star.x,
+          star.y,
+        );
+        const alpha =
+          star.opacity * (0.7 + 0.3 * Math.sin(time * 0.03 + star.x * 0.01));
+        grad.addColorStop(0, `rgba(${white}, ${white}, ${white}, 0)`);
+        grad.addColorStop(
+          0.3,
+          `rgba(${white}, ${white}, ${white}, ${alpha * 0.2})`,
+        );
+        grad.addColorStop(
+          0.7,
+          `rgba(${white}, ${white}, ${white}, ${alpha * 0.6})`,
+        );
+        grad.addColorStop(1, `rgba(${white}, ${white}, ${white}, ${alpha})`);
+        ctx.beginPath();
+        ctx.moveTo(star.x - star.length, star.y - star.length * star.angle);
+        ctx.lineTo(star.x, star.y);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = star.width;
+        ctx.stroke();
+        // Glow at the head of the shooting star
+        const glowGrad = ctx.createRadialGradient(
+          star.x,
+          star.y,
+          0,
+          star.x,
+          star.y,
+          star.width * 8,
+        );
+        glowGrad.addColorStop(
+          0,
+          `rgba(${white}, ${white}, ${white}, ${alpha * 0.6})`,
+        );
+        glowGrad.addColorStop(
+          0.5,
+          `rgba(${white}, ${white}, ${white}, ${alpha * 0.2})`,
+        );
+        glowGrad.addColorStop(1, `rgba(${white}, ${white}, ${white}, 0)`);
+        ctx.fillStyle = glowGrad;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.width * 8, 0, Math.PI * 2);
+        ctx.fill();
+        // Secondary smaller glow
+        const glowGrad2 = ctx.createRadialGradient(
+          star.x,
+          star.y,
+          0,
+          star.x,
+          star.y,
+          star.width * 15,
+        );
+        glowGrad2.addColorStop(
+          0,
+          `rgba(${white}, ${white}, ${white}, ${alpha * 0.15})`,
+        );
+        glowGrad2.addColorStop(1, `rgba(${white}, ${white}, ${white}, 0)`);
+        ctx.fillStyle = glowGrad2;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.width * 15, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+    const handleResize = () => {
+      if (!canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isDark]);
   const currentPlatform = platformConfig[activePlatform];
-
-  // Build download URL - platform specific
   const getDownloadUrl = (platform: string) => {
     const fileMap: Record<string, string> = {
       windows: `hippoxOS_windows_x86_64_v${version}.msi`,
@@ -103,29 +234,26 @@ export default function Hero() {
     const fileName = fileMap[platform] || "";
     return `https://github.com/HippoxHQ/hippoxOS/releases/download/v${version}/${fileName}`;
   };
-
-  // ArtText colors based on theme - black & white style with flow effect
-  // 暗色模式：文字亮色（白色），高光更亮（流光从亮色扫到更亮）
-  // 亮色模式：文字暗色（黑色），高光更暗（流光从暗色扫到更暗）
   const artTextColor = isDark ? "#e8edf2" : "#1a1a2e";
   const artLightColor = isDark ? "#a78bfa" : "#4f46e5";
-
   return (
-    <section className="relative min-h-[50vh] w-full flex items-center overflow-hidden">
+    <section className="relative w-full flex items-center overflow-hidden">
+      {/* Canvas for shooting stars - on top of background, behind content */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+        style={{ display: "block" }}
+      />
       {/* Background layer: gradients + glows + grid + image */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         {/* Base gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
-
         {/* Glow effects - top left */}
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
-
         {/* Glow effects - bottom right */}
         <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl" />
-
         {/* Glow effects - center right */}
         <div className="absolute top-1/2 right-1/4 w-60 h-60 rounded-full bg-cyan-500/4 blur-3xl" />
-
         {/* Grid texture - extremely subtle */}
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -137,7 +265,6 @@ export default function Hero() {
             backgroundSize: "60px 60px",
           }}
         />
-
         {/* Image - right side fading */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
@@ -154,12 +281,10 @@ export default function Hero() {
             }}
           />
         </div>
-
         {/* Bottom subtle gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
-
-      <div className="relative w-full max-w-7xl mx-auto px-6 py-16 lg:py-24 z-20">
+      <div className="relative w-full max-w-7xl mx-auto px-6 py-8 lg:py-12 z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Brand & Download */}
           <div className="space-y-8">
@@ -170,8 +295,7 @@ export default function Hero() {
                 {isCn ? "LLM 原生操作系统" : "LLM-Native OS"}
               </span>
             </div>
-
-            {/* Title - Black & White ArtText, left aligned, with flow effect */}
+            {/* Title */}
             <div className="w-full">
               <ArtText
                 text="HippoxOS"
@@ -186,17 +310,14 @@ export default function Hero() {
                 align="left"
               />
             </div>
-
             {/* Description */}
             <p className="text-base sm:text-lg text-foreground/70 max-w-lg leading-relaxed">
               {isCn
                 ? "通过对话完成视频编辑、3D创作、代码开发与数据分析"
                 : "Edit videos, build 3D scenes, code, and analyze data through conversation"}
             </p>
-
             {/* Download Section */}
             <div className="space-y-4">
-              {/* Platform selector - 3 buttons only */}
               <div className="flex flex-wrap items-center gap-2">
                 {(
                   Object.keys(platformConfig) as Array<
@@ -217,8 +338,6 @@ export default function Hero() {
                   </button>
                 ))}
               </div>
-
-              {/* Download button with version info */}
               <div className="flex flex-wrap items-center gap-4">
                 <a
                   href={getDownloadUrl(activePlatform)}
@@ -232,7 +351,6 @@ export default function Hero() {
                   </span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </a>
-
                 <a
                   href={GITHUB_REPO}
                   target="_blank"
@@ -243,22 +361,18 @@ export default function Hero() {
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </div>
-
-              {/* Version info only */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-foreground/40 font-mono">
                 <span>
                   {isCn ? "版本" : "Version"}: v{version}
                 </span>
               </div>
-
               <p className="text-xs text-foreground/30">
                 {isCn
                   ? "支持 Windows · macOS · Linux"
                   : "Available on Windows · macOS · Linux"}
               </p>
             </div>
-
-            {/* GitHub Stats - fetched from API */}
+            {/* GitHub Stats */}
             <div className="flex items-center gap-6 pt-2 border-t border-foreground/10">
               <a
                 href={GITHUB_REPO}
@@ -283,7 +397,6 @@ export default function Hero() {
               </div>
             </div>
           </div>
-
           {/* Right Column - empty */}
           <div className="hidden lg:block" />
         </div>

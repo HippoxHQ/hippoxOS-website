@@ -1,239 +1,193 @@
-// app/components/FunctionList.tsx
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import { useI18n } from "../providers/I18nProvider";
-import { Play, Pause, Maximize2 } from "lucide-react";
-
 // Subsystem data with video backgrounds
 const subsystems = [
+  {
+    id: "general-chat",
+    name: "General Chat",
+    nameZh: "通用对话",
+    description: "Daily Q&A · Task Execution · Knowledge Retrieval",
+    descriptionZh: "日常问答 · 任务执行 · 知识检索",
+    detail:
+      "Natural language interaction with LLM for daily questions, task automation, and knowledge base retrieval.",
+    detailZh:
+      "通过自然语言与 LLM 深度交互，真正意义上实现对计算机的完全控制 —— 从系统级操作到硬件设备调度，释放计算机 100% 的潜能，让每一条指令都精准执行。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
+    color: "#818cf8",
+  },
   {
     id: "video-editor",
     name: "Video Editor",
     nameZh: "视频编辑",
-    description: "Edit videos with AI assistance through conversation",
-    descriptionZh: "通过对话完成视频剪辑、特效与字幕生成",
-    video: "/videos/video-editor-demo.mp4",
-    poster: "/posters/video-editor-poster.jpg",
+    description: "Edit · Effects · Export · Multi-track",
+    descriptionZh: "剪辑 · 特效 · 导出 · 多轨道编辑",
+    detail:
+      "AI-powered video editing through conversation. Add effects, captions, and export with multi-track support.",
+    detailZh:
+      "搭载自研 NLE 非线性编辑引擎，支持多轨道剪辑、线性动画、26 种专业转场、15 种滤镜效果、78 种 VFX 视觉特效及 15 种运镜特效，一站式完成从剪辑到导出的全流程视频创作。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
     color: "#818cf8",
-  },
-  {
-    id: "3d-sandbox",
-    name: "3D Sandbox",
-    nameZh: "3D 场景",
-    description: "Generate and manipulate 3D scenes using natural language",
-    descriptionZh: "通过自然语言生成和操控 3D 场景",
-    video: "/videos/3d-sandbox-demo.mp4",
-    poster: "/posters/3d-sandbox-poster.jpg",
-    color: "#22d3ee",
-  },
-  {
-    id: "code-editor",
-    name: "Code Editor",
-    nameZh: "代码编辑",
-    description: "AI-powered code generation, refactoring and diff review",
-    descriptionZh: "AI 驱动的代码生成、重构与 Diff 审核",
-    video: "/videos/code-editor-demo.mp4",
-    poster: "/posters/code-editor-poster.jpg",
-    color: "#34d399",
   },
   {
     id: "finance",
     name: "Finance",
     nameZh: "金融分析",
-    description: "Real-time market data, technical analysis and charting",
-    descriptionZh: "实时行情、技术分析与专业图表绘制",
-    video: "/videos/finance-demo.mp4",
-    poster: "/posters/finance-poster.jpg",
+    description: "Candlestick · Indicators · Market Analysis",
+    descriptionZh: "K线分析 · 技术指标 · 市场研判",
+    detail:
+      "Real-time market data visualization with candlestick charts, technical indicators, and trend analysis.",
+    detailZh:
+      "搭载自研时间序列数据图形引擎，原生支持 DSL 分析语言与 OHLCV 金融数据模型，实现毫秒级行情数据可视化、技术指标计算与量化策略回测。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
     color: "#f59e0b",
+  },
+  {
+    id: "code-editor",
+    name: "Code Editor",
+    nameZh: "代码编辑",
+    description: "Write · Review · Refactor · Auto-complete",
+    descriptionZh: "编写 · 审查 · 重构 · 自动补全",
+    detail:
+      "AI-assisted code writing, refactoring, and review with intelligent auto-completion and diff visualization.",
+    detailZh:
+      "AI 辅助代码编写、重构与审查，支持智能自动补全和可视化 Diff 对比。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
+    color: "#34d399",
+  },
+  {
+    id: "3d-sandbox",
+    name: "3D Sandbox",
+    nameZh: "3D 场景",
+    description: "3D Modeling · Scene Building · Real-time Render",
+    descriptionZh: "三维建模 · 场景构建 · 实时渲染",
+    detail:
+      "Create and manipulate 3D scenes using natural language. Real-time rendering with Three.js engine.",
+    detailZh:
+      "基于 Three.js 引擎的实时 3D 创作沙盒，支持 PBR 材质、物理光照、粒子系统与骨骼动画。通过自然语言即可生成、编辑和操控三维场景，所见即所得的实时渲染体验。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
+    color: "#22d3ee",
   },
   {
     id: "maps",
     name: "Maps",
-    nameZh: "智能地图",
-    description: "Visualize data, routes and geospatial information",
-    descriptionZh: "可视化数据、路线规划与地理信息分析",
-    video: "/videos/maps-demo.mp4",
-    poster: "/posters/maps-poster.jpg",
+    nameZh: "地理信息",
+    description: "Location · Route · Spatial Data",
+    descriptionZh: "位置标注 · 路线规划 · 空间数据",
+    detail:
+      "Geospatial data visualization with location tagging, route planning, and spatial analysis capabilities.",
+    detailZh:
+      "基于 WebGL 的地理空间数据可视化平台，支持多源矢量/栅格数据加载、交互式位置标注、智能路线规划与空间分析，让地理信息触手可及。",
+    video: "http://vjs.zencdn.net/v/oceans.mp4",
     color: "#f472b6",
   },
-  {
-    id: "task-scheduler",
-    name: "Task Scheduler",
-    nameZh: "任务调度",
-    description: "Create automated scheduled tasks in natural language",
-    descriptionZh: "通过自然语言创建自动化定时任务",
-    video: "/videos/task-scheduler-demo.mp4",
-    poster: "/posters/task-scheduler-poster.jpg",
-    color: "#a78bfa",
-  },
 ];
-
-// Video card component with hover play/pause controls
-const FunctionCard = ({
-  subsystem,
-  isHovered,
-  onHover,
-}: {
-  subsystem: (typeof subsystems)[0];
-  isHovered: boolean;
-  onHover: (id: string | null) => void;
-}) => {
+// Video card component with autoplay and dense content
+const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
   const { locale } = useI18n();
   const isCn = locale === "cn";
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  // Handle play/pause via ref - no setState in effect
+  const [videoError, setVideoError] = useState(false);
+  // Auto-play video when component mounts
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    if (isHovered) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-      video.currentTime = 0;
-    }
-  }, [isHovered]);
-
-  // Listen to video play/pause events to sync UI state
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-    const handleEnded = () => setIsPlaying(false);
-
-    video.addEventListener("play", handlePlay);
-    video.addEventListener("pause", handlePause);
-    video.addEventListener("ended", handleEnded);
-
-    return () => {
-      video.removeEventListener("play", handlePlay);
-      video.removeEventListener("pause", handlePause);
-      video.removeEventListener("ended", handleEnded);
-    };
+    video.play().catch(() => {});
   }, []);
-
-  const handleTogglePlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-    } else {
-      video.play().catch(() => {});
-    }
-  };
-
   const name = isCn ? subsystem.nameZh : subsystem.name;
   const description = isCn ? subsystem.descriptionZh : subsystem.description;
-
+  const detail = isCn ? subsystem.detailZh : subsystem.detail;
   return (
-    <div
-      className="relative group rounded-2xl overflow-hidden aspect-video bg-background border border-border/30 transition-all duration-500 hover:border-border/60 hover:shadow-2xl hover:shadow-foreground/5 cursor-pointer"
-      onMouseEnter={() => onHover(subsystem.id)}
-      onMouseLeave={() => onHover(null)}
-    >
-      {/* Video Background */}
+    <div className="relative group aspect-[4/1] bg-background border-b border-border/40 last:border-b-0 cursor-pointer transition-all duration-300 hover:bg-background/80 overflow-hidden">
+      {/* Video Background - autoplay loop */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          muted
-          loop
-          playsInline
-          poster={subsystem.poster}
-        >
-          <source src={subsystem.video} type="video/mp4" />
-        </video>
-
-        {/* Overlay gradient - bottom to top for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-transparent" />
-      </div>
-
-      {/* Play/Pause Overlay Button - visible on hover */}
-      <button
-        onClick={handleTogglePlay}
-        className="absolute top-3 right-3 p-2 rounded-full bg-background/60 backdrop-blur-sm border border-border/30 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-background/80 hover:scale-110 z-10"
-        aria-label={isPlaying ? "Pause" : "Play"}
-      >
-        {isPlaying ? (
-          <Pause className="w-3.5 h-3.5 text-foreground/70" />
+        {!videoError ? (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            muted
+            loop
+            playsInline
+            onError={() => setVideoError(true)}
+          >
+            <source src={subsystem.video} type="video/mp4" />
+          </video>
         ) : (
-          <Play className="w-3.5 h-3.5 text-foreground/70" />
-        )}
-      </button>
-
-      {/* Content - bottom aligned */}
-      <div className="absolute bottom-0 left-0 right-0 p-5">
-        <div className="flex items-center gap-2 mb-1">
           <div
-            className="w-1.5 h-1.5 rounded-full"
+            className="w-full h-full bg-gradient-to-br from-background/80 to-background/40"
+            style={{
+              backgroundImage: `radial-gradient(circle at 70% 50%, ${subsystem.color}15, transparent 70%)`,
+            }}
+          />
+        )}
+      </div>
+      {/* Elegant gradient overlay - smooth transition from transparent left to frosted glass right */}
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-transparent via-40% to-background/90" />
+      {/* Content - right aligned */}
+      <div className="absolute inset-0 flex items-center justify-end p-6">
+        <div className="max-w-[50%] text-right relative z-10">
+          {/* Color indicator dot */}
+          <div
+            className="w-1.5 h-1.5 rounded-full mb-2 ml-auto"
             style={{ backgroundColor: subsystem.color }}
           />
-          <h3 className="text-base font-semibold text-foreground/90 tracking-tight">
+          {/* Title */}
+          <h3 className="text-lg font-semibold text-foreground/90 tracking-tight mb-1">
             {name}
           </h3>
-        </div>
-        <p className="text-xs text-foreground/50 leading-relaxed line-clamp-2">
-          {description}
-        </p>
-
-        {/* Learn more indicator - appears on hover */}
-        <div className="mt-2 flex items-center gap-1.5 text-xs text-foreground/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span>{isCn ? "了解更多" : "Learn more"}</span>
-          <Maximize2 className="w-3 h-3" />
+          {/* Short description */}
+          <p className="text-xs text-foreground/60 leading-relaxed mb-1.5">
+            {description}
+          </p>
+          {/* Detailed description */}
+          <p className="text-[11px] text-foreground/45 leading-relaxed max-w-sm ml-auto">
+            {detail}
+          </p>
         </div>
       </div>
-
       {/* Hover glow effect */}
       <div
-        className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10"
-        style={{ backgroundColor: `${subsystem.color}15` }}
+        className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10"
+        style={{ backgroundColor: `${subsystem.color}10` }}
       />
     </div>
   );
 };
-
 // Main FunctionList component
 export default function FunctionList() {
   const { locale } = useI18n();
   const isCn = locale === "cn";
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
   return (
-    <section className="w-full py-12">
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-6">
+    <section className="w-full py-8">
+      <div className="flex items-center justify-between mb-4 px-1">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
             {isCn ? "核心功能" : "Core Functions"}
           </h2>
-          <p className="text-sm text-foreground/40 mt-0.5">
+          <p className="text-xs text-foreground/40 mt-0.5">
             {isCn
               ? "HippoxOS 的核心子系统，全部通过对话驱动"
               : "HippoxOS core subsystems, all driven by conversation"}
           </p>
         </div>
-        <div className="text-xs text-foreground/20 font-mono">
+        <div className="text-[10px] text-foreground/20 font-mono">
           {subsystems.length} {isCn ? "个模块" : "modules"}
         </div>
       </div>
-
-      {/* Cards grid - 2 columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {subsystems.map((subsystem) => (
-          <FunctionCard
+      <div className="grid grid-cols-1 md:grid-cols-2 border border-border/40 rounded-none">
+        {subsystems.map((subsystem, index) => (
+          <div
             key={subsystem.id}
-            subsystem={subsystem}
-            isHovered={hoveredId === subsystem.id}
-            onHover={setHoveredId}
-          />
+            className={`
+              ${index % 2 === 0 ? "border-r border-border/40" : ""}
+              ${index < subsystems.length - 2 ? "border-b border-border/40" : ""}
+              ${index >= subsystems.length - 2 && index % 2 === 1 ? "" : ""}
+              md:${index % 2 === 0 ? "border-r border-border/40" : ""}
+              md:${index < subsystems.length - 2 ? "border-b border-border/40" : ""}
+            `}
+          >
+            <FunctionCard subsystem={subsystem} />
+          </div>
         ))}
       </div>
     </section>

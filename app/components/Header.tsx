@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
 import { useI18n } from "../providers/I18nProvider";
 import { useTheme } from "../providers/ThemeProvider";
 import { useState, useRef } from "react";
@@ -19,20 +18,18 @@ import { BlueskyIcon } from "../icons/BlueskyIcon";
 import { WeChatIcon } from "../icons/WeChatIcon";
 import { QQIcon } from "../icons/QQIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
-
+import { XIcon } from "../icons/XIcon";
 export default function Header() {
   const { locale, setLocale } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const isZh = locale === "cn";
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   // Social popup state
   const [showWechatPopup, setShowWechatPopup] = useState(false);
   const [showQQPopup, setShowQQPopup] = useState(false);
   const wechatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const qqTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const handleLangMouseEnter = () => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
@@ -40,45 +37,36 @@ export default function Header() {
     }
     setShowLangDropdown(true);
   };
-
   const handleLangMouseLeave = () => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setShowLangDropdown(false);
     }, 150);
   };
-
   // Social link handlers
   const handleGithubClick = () => {
     window.open("https://github.com/HippoxHQ", "_blank");
   };
-
   const handleXClick = () => {
     window.open("https://x.com/HippoxAI", "_blank");
   };
-
   const handleBlueskyClick = () => {
     window.open("https://bsky.app/profile/hippoxai.bsky.social", "_blank");
   };
-
   const handleMediumClick = () => {
     window.open("https://hippox.medium.com/", "_blank");
   };
-
   // Discord and Telegram - placeholders for now
   const handleDiscordClick = () => {
     // TODO: Replace with actual Discord invite link
     window.open("https://discord.gg/hippox", "_blank");
   };
-
   const handleTelegramClick = () => {
     // TODO: Replace with actual Telegram group link
     window.open("https://t.me/hippox", "_blank");
   };
-
   const handleCargoClick = () => {
     window.open("https://crates.io/crates/hippox", "_blank");
   };
-
   // WeChat popup handlers
   const handleWechatMouseEnter = () => {
     if (wechatTimeoutRef.current) {
@@ -87,13 +75,11 @@ export default function Header() {
     }
     setShowWechatPopup(true);
   };
-
   const handleWechatMouseLeave = () => {
     wechatTimeoutRef.current = setTimeout(() => {
       setShowWechatPopup(false);
     }, 200);
   };
-
   // QQ popup handlers
   const handleQQMouseEnter = () => {
     if (qqTimeoutRef.current) {
@@ -102,13 +88,11 @@ export default function Header() {
     }
     setShowQQPopup(true);
   };
-
   const handleQQMouseLeave = () => {
     qqTimeoutRef.current = setTimeout(() => {
       setShowQQPopup(false);
     }, 200);
   };
-
   return (
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-6 h-14">
@@ -127,9 +111,7 @@ export default function Header() {
             </span>
           </div>
         </div>
-
         <div className="flex-1" />
-
         <div className="flex items-center gap-2.5">
           {/* X (Twitter) - Keep original SVG */}
           <button
@@ -139,16 +121,8 @@ export default function Header() {
             aria-label="X (Twitter)"
             title={isZh ? "访问 X 账号" : "Visit X account"}
           >
-            <svg
-              className="w-4 h-4"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              stroke="none"
-            >
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-            </svg>
+            <XIcon className="w-4 h-4" />
           </button>
-
           {/* GitHub - Now using GitHubIcon component */}
           <button
             type="button"
@@ -159,7 +133,6 @@ export default function Header() {
           >
             <GitHubIcon className="w-4 h-4" />
           </button>
-
           {/* Bluesky */}
           <button
             type="button"
@@ -170,7 +143,6 @@ export default function Header() {
           >
             <BlueskyIcon className="w-4 h-4" />
           </button>
-
           {/* Medium */}
           <button
             type="button"
@@ -181,7 +153,6 @@ export default function Header() {
           >
             <MediumIcon size={16} />
           </button>
-
           {/* Discord */}
           <button
             type="button"
@@ -192,7 +163,6 @@ export default function Header() {
           >
             <DiscordIcon size={16} />
           </button>
-
           {/* Telegram */}
           <button
             type="button"
@@ -203,7 +173,6 @@ export default function Header() {
           >
             <Send className="w-4 h-4" />
           </button>
-
           {/* Theme Toggle */}
           <button
             type="button"
@@ -217,7 +186,6 @@ export default function Header() {
               <Moon className="w-4 h-4" />
             )}
           </button>
-
           {/* Language Dropdown */}
           <div
             className="relative"
@@ -261,7 +229,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
           {/* WeChat - QR Code Popup */}
           <div
             className="relative"
@@ -276,7 +243,6 @@ export default function Header() {
             >
               <WeChatIcon className="w-4 h-4" />
             </button>
-
             {/* WeChat QR Code Popup */}
             {showWechatPopup && (
               <div
@@ -300,7 +266,6 @@ export default function Header() {
               </div>
             )}
           </div>
-
           {/* QQ - QR Code Popup */}
           <div
             className="relative"
@@ -315,7 +280,6 @@ export default function Header() {
             >
               <QQIcon className="w-4 h-4" />
             </button>
-
             {/* QQ QR Code Popup */}
             {showQQPopup && (
               <div
