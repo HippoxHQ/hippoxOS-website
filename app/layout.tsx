@@ -26,21 +26,21 @@ const defaultLocale = "en";
 
 const metadataMap = {
   cn: {
-    title: "🦛 HippoxOS - LLM 原生操作系统",
+    title: "HippoxOS - LLM 原生操作系统",
     description:
       "AI 原生 · 会话驱动 · 跨领域智能工作台 — 视频编辑、3D创作、代码开发、数据分析，全部通过对话完成",
     openGraph: {
-      title: "🦛 HippoxOS - LLM 原生操作系统",
+      title: "HippoxOS - LLM 原生操作系统",
       description:
         "AI 原生 · 会话驱动 · 跨领域智能工作台 — 视频编辑、3D创作、代码开发、数据分析，全部通过对话完成",
     },
   },
   en: {
-    title: "🦛 HippoxOS - LLM-Native Operating System",
+    title: "HippoxOS - LLM-Native Operating System",
     description:
       "AI-Native · Conversation-Driven · Cross-Domain Intelligent Workbench — Video editing, 3D creation, coding, data analysis, all through conversation",
     openGraph: {
-      title: "🦛 HippoxOS - LLM-Native Operating System",
+      title: "HippoxOS - LLM-Native Operating System",
       description:
         "AI-Native · Conversation-Driven · Cross-Domain Intelligent Workbench — Video editing, 3D creation, coding, data analysis, all through conversation",
     },

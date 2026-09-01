@@ -201,6 +201,7 @@ export default function Hero() {
         ctx.strokeStyle = grad;
         ctx.lineWidth = star.width;
         ctx.stroke();
+        // Glow at the head of the shooting star
         const glowGrad = ctx.createRadialGradient(
           star.x,
           star.y,
@@ -222,6 +223,7 @@ export default function Hero() {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.width * 8, 0, Math.PI * 2);
         ctx.fill();
+        // Secondary smaller glow
         const glowGrad2 = ctx.createRadialGradient(
           star.x,
           star.y,
@@ -268,16 +270,23 @@ export default function Hero() {
   const artLightColor = isDark ? "#a78bfa" : "#4f46e5";
   return (
     <section className="relative w-full flex items-center overflow-hidden">
+      {/* Canvas for shooting stars - on top of background, behind content */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         style={{ display: "block" }}
       />
+      {/* Background layer: gradients + glows + grid + image */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        {/* Base gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
+        {/* Glow effects - top left */}
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
+        {/* Glow effects - bottom right */}
         <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl" />
+        {/* Glow effects - center right */}
         <div className="absolute top-1/2 right-1/4 w-60 h-60 rounded-full bg-cyan-500/4 blur-3xl" />
+        {/* Grid texture - extremely subtle */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -288,6 +297,7 @@ export default function Hero() {
             backgroundSize: "60px 60px",
           }}
         />
+        {/* Image - right side fading */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/40 z-10" />
@@ -303,17 +313,21 @@ export default function Hero() {
             }}
           />
         </div>
+        {/* Bottom subtle gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
       <div className="relative w-full max-w-7xl mx-auto px-6 py-8 lg:py-12 z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Column - Brand & Download */}
           <div className="space-y-6">
+            {/* Badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-foreground/20 bg-background/50 backdrop-blur-sm">
               <Sparkles className="w-3.5 h-3.5 text-foreground/50" />
               <span className="text-xs font-medium text-foreground/50 tracking-wider uppercase">
                 {isCn ? "LLM 原生操作系统" : "LLM-Native OS"}
               </span>
             </div>
+            {/* Title - ArtText with cursive font */}
             <div className="w-full">
               <ArtText
                 text="HippoxOS"
@@ -328,6 +342,7 @@ export default function Hero() {
                 align="left"
               />
             </div>
+            {/* Description with #hippoxOS hashtag link */}
             <p className="text-base sm:text-lg text-foreground/70 max-w-2xl leading-relaxed">
               {isCn
                 ? "真正意义上的自然语言计算机控制 —— 通过对话驱动视频编辑、3D场景构建、代码开发与金融数据分析，让LLM成为你的操作系统解释层。"
@@ -344,6 +359,7 @@ export default function Hero() {
                 <ArrowUpRight className="w-3 h-3 opacity-40 group-hover:opacity-80 transition-opacity" />
               </a>
             </p>
+            {/* Stats row - compact: GitHub, Stars, Forks, Downloads */}
             <div className="flex items-center gap-6 text-xs text-foreground/40">
               <a
                 href={GITHUB_REPO}
@@ -367,7 +383,9 @@ export default function Hero() {
                 <span>{loading ? "..." : githubStats.totalDownloads}</span>
               </div>
             </div>
+            {/* Download Section */}
             <div className="space-y-3">
+              {/* Platform selector - 3 buttons only */}
               <div className="flex flex-wrap items-center gap-2">
                 {(
                   Object.keys(platformConfig) as Array<
@@ -388,6 +406,7 @@ export default function Hero() {
                   </button>
                 ))}
               </div>
+              {/* Download button with version info */}
               <div className="flex flex-wrap items-center gap-4">
                 <a
                   href={getDownloadUrl(activePlatform)}
@@ -411,18 +430,66 @@ export default function Hero() {
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </div>
+              {/* Version info only */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-foreground/40 font-mono">
                 <span>
                   {isCn ? "版本" : "Version"}: v{version}
                 </span>
               </div>
-              <p className="text-xs text-foreground/30">
+              <p className="text-xs text-foreground/45">
                 {isCn
                   ? "支持 Windows · macOS · Linux"
                   : "Available on Windows · macOS · Linux"}
               </p>
+              {/* Issues & Discussions Links */}
+              <div className="flex items-center gap-4 text-xs text-foreground/45 pt-1">
+                <a
+                  href="https://github.com/HippoxHQ/hippoxOS/issues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground/60 transition-colors group"
+                >
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>Issues</span>
+                </a>
+                <span className="text-foreground/10">·</span>
+                <a
+                  href="https://github.com/HippoxHQ/hippoxOS/discussions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-foreground/60 transition-colors group"
+                >
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
+                  </svg>
+                  <span>Discussions</span>
+                </a>
+              </div>
             </div>
           </div>
+          {/* Right Column - empty */}
           <div className="hidden lg:block" />
         </div>
       </div>
