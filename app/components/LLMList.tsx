@@ -120,7 +120,6 @@ export default function LLMList() {
   }, [isPaused]);
   return (
     <section className="w-full py-4 overflow-hidden">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-3">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border/20" />
         <span className="text-[9px] font-medium text-foreground/30 tracking-[0.2em] uppercase">
@@ -128,7 +127,6 @@ export default function LLMList() {
         </span>
         <div className="h-px flex-1 bg-gradient-to-l from-transparent to-border/20" />
       </div>
-      {/* Marquee */}
       <div
         className="relative overflow-hidden"
         onMouseEnter={() => setIsPaused(true)}

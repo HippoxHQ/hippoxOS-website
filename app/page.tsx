@@ -35,7 +35,7 @@ export default function HomePage() {
           <VideoShowcase />
         </div>
         {/* Rest of content */}
-        <div className="max-w-5xl mx-auto px-6 py-4 space-y-5">
+        {/* <div className="max-w-5xl mx-auto px-6 py-4 space-y-5">
           <div className="grid grid-cols-2 gap-5">
             <SatelliteProjects
               onSelectRepo={handleSelectRepo}
@@ -43,7 +43,7 @@ export default function HomePage() {
             />
             <DocsList />
           </div>
-        </div>
+        </div> */}
         <Footer />
       </div>
     </div>

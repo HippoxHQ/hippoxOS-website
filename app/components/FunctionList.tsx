@@ -99,7 +99,6 @@ const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
   const detail = isCn ? subsystem.detailZh : subsystem.detail;
   return (
     <div className="relative group aspect-[4/1] bg-background border-b border-border/40 last:border-b-0 cursor-pointer transition-all duration-300 hover:bg-background/80 overflow-hidden">
-      {/* Video Background - autoplay loop */}
       <div className="absolute inset-0 w-full h-full">
         {!videoError ? (
           <video
@@ -121,31 +120,24 @@ const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
           />
         )}
       </div>
-      {/* Elegant gradient overlay - smooth transition from transparent left to frosted glass right */}
       <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-transparent via-40% to-background/90" />
-      {/* Content - right aligned */}
       <div className="absolute inset-0 flex items-center justify-end p-6">
         <div className="max-w-[50%] text-right relative z-10">
-          {/* Color indicator dot */}
           <div
             className="w-1.5 h-1.5 rounded-full mb-2 ml-auto"
             style={{ backgroundColor: subsystem.color }}
           />
-          {/* Title */}
           <h3 className="text-lg font-semibold text-foreground/90 tracking-tight mb-1">
             {name}
           </h3>
-          {/* Short description */}
           <p className="text-xs text-foreground/60 leading-relaxed mb-1.5">
             {description}
           </p>
-          {/* Detailed description */}
           <p className="text-[11px] text-foreground/45 leading-relaxed max-w-sm ml-auto">
             {detail}
           </p>
         </div>
       </div>
-      {/* Hover glow effect */}
       <div
         className="absolute -inset-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10"
         style={{ backgroundColor: `${subsystem.color}10` }}

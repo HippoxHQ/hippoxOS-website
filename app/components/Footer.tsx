@@ -81,7 +81,6 @@ export default function Footer() {
   return (
     <footer className="w-full border-t border-border/40 bg-background/30 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Main menu grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
           {menuSections.map((section) => (
             <div key={section.title}>
@@ -105,9 +104,7 @@ export default function Footer() {
             </div>
           ))}
         </div>
-        {/* Bottom bar: social + brand + copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-border/20">
-          {/* Social icons */}
           <div className="flex items-center gap-3">
             {socialLinks.map((social) => {
               const Icon = social.icon;
@@ -129,7 +126,6 @@ export default function Footer() {
               );
             })}
           </div>
-          {/* Brand & Copyright */}
           <div className="flex flex-col items-center sm:items-end gap-1 text-[10px] text-foreground/35">
             <div className="flex items-center gap-2">
               <span className="font-medium tracking-wide">HippoxOS</span>

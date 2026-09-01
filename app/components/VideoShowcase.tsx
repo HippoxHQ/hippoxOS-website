@@ -97,7 +97,6 @@ const VideoCard = ({
       className="group relative rounded-lg overflow-hidden cursor-pointer bg-background border border-border/40 transition-all duration-300 hover:border-border/80 hover:shadow-xl hover:shadow-foreground/5 flex-shrink-0 w-[280px]"
       onClick={() => onPlay(video)}
     >
-      {/* iframe 视频预览 */}
       <div className="relative aspect-video bg-black">
         <iframe
           src={video.embedUrl}
@@ -105,22 +104,18 @@ const VideoCard = ({
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           loading="lazy"
         />
-        {/* 半透明遮罩 */}
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/20 transition-all duration-300">
           {/* <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-background shadow-2xl transform scale-90 group-hover:scale-110 transition-transform duration-300">
             <Play className="w-5 h-5 ml-0.5" />
           </div> */}
         </div>
-        {/* 平台标识 */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium">
           <span>{platformLabels[video.platform]}</span>
         </div>
-        {/* 时长 */}
         <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded text-[10px] font-medium bg-black/70 text-white backdrop-blur-sm">
           {video.duration}
         </div>
       </div>
-      {/* 信息 */}
       <div className="p-3">
         <h4 className="text-sm font-medium text-foreground/90 line-clamp-1">
           {isCn ? video.titleZh : video.title}
@@ -152,7 +147,6 @@ const VideoPlayer = ({
         className="relative w-full max-w-4xl mx-4 bg-background rounded-xl overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 bg-background border-b border-border/40">
           <h3 className="text-sm font-medium text-foreground truncate">
             {/* {isCn ? video.titleZh : video.title} */}
@@ -176,7 +170,6 @@ const VideoPlayer = ({
             </svg>
           </button>
         </div>
-        {/* Video Player */}
         <div className="aspect-video bg-black">
           <iframe
             src={video.embedUrl}
@@ -186,7 +179,6 @@ const VideoPlayer = ({
             loading="lazy"
           />
         </div>
-        {/* Footer */}
         <div className="flex items-center justify-between px-4 py-2 bg-background/80 border-t border-border/40">
           <span className="text-xs text-foreground/40">
             {isCn ? "在" : "Watch on"} {platformLabels[video.platform]}
@@ -236,7 +228,6 @@ export default function VideoShowcase() {
   };
   return (
     <section className="w-full py-8">
-      {/* Section Header */}
       <div className="flex items-center justify-between mb-4 px-1">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-foreground">
@@ -252,9 +243,7 @@ export default function VideoShowcase() {
           {videos.length} {isCn ? "个视频" : "videos"}
         </div>
       </div>
-      {/* 滚动容器 */}
       <div className="relative">
-        {/* 左滚动按钮 - 38x38，鼠标指针 */}
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
@@ -263,7 +252,6 @@ export default function VideoShowcase() {
             <ChevronLeft className="w-4 h-4 text-foreground/70" />
           </button>
         )}
-        {/* 右滚动按钮 - 38x38，鼠标指针 */}
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
@@ -272,7 +260,6 @@ export default function VideoShowcase() {
             <ChevronRight className="w-4 h-4 text-foreground/70" />
           </button>
         )}
-        {/* 视频卡片列表 - 水平滚动 */}
         <div
           ref={scrollContainerRef}
           className="flex gap-4 overflow-x-auto scroll-smooth pb-2 hide-scrollbar"
@@ -283,7 +270,6 @@ export default function VideoShowcase() {
           ))}
         </div>
       </div>
-      {/* Video Player Modal */}
       <VideoPlayer
         video={selectedVideo}
         onClose={() => setSelectedVideo(null)}

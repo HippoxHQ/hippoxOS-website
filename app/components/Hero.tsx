@@ -21,19 +21,32 @@ const platformConfig = {
   windows: {
     label: "Windows",
     icon: <WindowsIcon className="w-4 h-4" />,
+    assetPattern: "windows",
   },
   macos: {
     label: "macOS",
     icon: <MacOSIcon className="w-4 h-4" />,
+    assetPattern: "macos",
   },
   linux: {
     label: "Linux",
     icon: <LinuxIcon className="w-4 h-4" />,
+    assetPattern: "linux",
   },
 };
 // GitHub repository URL
 const GITHUB_REPO = "https://github.com/HippoxHQ/hippoxOS";
 const GITHUB_API = "https://api.github.com/repos/HippoxHQ/hippoxOS";
+interface ReleaseAsset {
+  name: string;
+  download_count: number;
+  browser_download_url: string;
+}
+interface Release {
+  tag_name: string;
+  assets: ReleaseAsset[];
+  published_at: string;
+}
 export default function Hero() {
   const { locale } = useI18n();
   const { theme } = useTheme();
@@ -45,9 +58,11 @@ export default function Hero() {
   const [githubStats, setGithubStats] = useState<{
     stars: string;
     forks: string;
+    totalDownloads: string;
   }>({
     stars: "0",
     forks: "0",
+    totalDownloads: "0",
   });
   const [version, setVersion] = useState<string>("0.0.0");
   const [loading, setLoading] = useState(true);
@@ -60,11 +75,13 @@ export default function Hero() {
         const response = await fetch(GITHUB_API);
         if (response.ok) {
           const data = await response.json();
-          setGithubStats({
+          setGithubStats((prev) => ({
+            ...prev,
             stars: data.stargazers_count?.toLocaleString() || "0",
             forks: data.forks_count?.toLocaleString() || "0",
-          });
+          }));
         }
+        // Fetch latest release version from tags
         const tagsResponse = await fetch(
           "https://api.github.com/repos/HippoxHQ/hippoxOS/tags",
         );
@@ -74,6 +91,26 @@ export default function Hero() {
             const latestTag = tags[0].name.replace(/^v/, "");
             setVersion(latestTag);
           }
+        }
+        // Fetch all releases to calculate total downloads
+        const releasesResponse = await fetch(
+          "https://api.github.com/repos/HippoxHQ/hippoxOS/releases?per_page=100",
+        );
+        if (releasesResponse.ok) {
+          const releases: Release[] = await releasesResponse.json();
+          let totalDownloads = 0;
+          for (const release of releases) {
+            for (const asset of release.assets) {
+              totalDownloads += asset.download_count;
+            }
+          }
+          setGithubStats((prev) => ({
+            ...prev,
+            totalDownloads:
+              totalDownloads >= 1000
+                ? (totalDownloads / 1000).toFixed(1) + "K"
+                : totalDownloads.toString(),
+          }));
         }
       } catch (error) {
         console.error("Failed to fetch GitHub data:", error);
@@ -91,7 +128,6 @@ export default function Hero() {
     if (!ctx) return;
     let width = (canvas.width = canvas.parentElement?.clientWidth || 0);
     let height = (canvas.height = canvas.parentElement?.clientHeight || 0);
-    // Shooting star particles
     interface Star {
       x: number;
       y: number;
@@ -123,7 +159,6 @@ export default function Hero() {
       ctx.clearRect(0, 0, width, height);
       for (const star of stars) {
         if (!star.active) {
-          // 5% chance to activate each frame when not active
           if (Math.random() < 0.05) {
             star.active = true;
             star.x = -50 - Math.random() * 200;
@@ -135,15 +170,12 @@ export default function Hero() {
           }
           continue;
         }
-        // Move star from left to right with slight downward angle
         star.x += star.speed;
         star.y += star.speed * star.angle;
-        // Deactivate when off screen
         if (star.x > width + 200 || star.y > height + 100) {
           star.active = false;
           continue;
         }
-        // Calculate gradient along the trail
         const white = isDark ? 255 : 0;
         const grad = ctx.createLinearGradient(
           star.x - star.length,
@@ -169,7 +201,6 @@ export default function Hero() {
         ctx.strokeStyle = grad;
         ctx.lineWidth = star.width;
         ctx.stroke();
-        // Glow at the head of the shooting star
         const glowGrad = ctx.createRadialGradient(
           star.x,
           star.y,
@@ -191,7 +222,6 @@ export default function Hero() {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.width * 8, 0, Math.PI * 2);
         ctx.fill();
-        // Secondary smaller glow
         const glowGrad2 = ctx.createRadialGradient(
           star.x,
           star.y,
@@ -238,23 +268,16 @@ export default function Hero() {
   const artLightColor = isDark ? "#a78bfa" : "#4f46e5";
   return (
     <section className="relative w-full flex items-center overflow-hidden">
-      {/* Canvas for shooting stars - on top of background, behind content */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         style={{ display: "block" }}
       />
-      {/* Background layer: gradients + glows + grid + image */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Base gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
-        {/* Glow effects - top left */}
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
-        {/* Glow effects - bottom right */}
         <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl" />
-        {/* Glow effects - center right */}
         <div className="absolute top-1/2 right-1/4 w-60 h-60 rounded-full bg-cyan-500/4 blur-3xl" />
-        {/* Grid texture - extremely subtle */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -265,7 +288,6 @@ export default function Hero() {
             backgroundSize: "60px 60px",
           }}
         />
-        {/* Image - right side fading */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/40 z-10" />
@@ -281,21 +303,17 @@ export default function Hero() {
             }}
           />
         </div>
-        {/* Bottom subtle gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
       <div className="relative w-full max-w-7xl mx-auto px-6 py-8 lg:py-12 z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Brand & Download */}
-          <div className="space-y-8">
-            {/* Badge */}
+          <div className="space-y-6">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-foreground/20 bg-background/50 backdrop-blur-sm">
               <Sparkles className="w-3.5 h-3.5 text-foreground/50" />
               <span className="text-xs font-medium text-foreground/50 tracking-wider uppercase">
                 {isCn ? "LLM 原生操作系统" : "LLM-Native OS"}
               </span>
             </div>
-            {/* Title */}
             <div className="w-full">
               <ArtText
                 text="HippoxOS"
@@ -310,14 +328,46 @@ export default function Hero() {
                 align="left"
               />
             </div>
-            {/* Description */}
-            <p className="text-base sm:text-lg text-foreground/70 max-w-lg leading-relaxed">
+            <p className="text-base sm:text-lg text-foreground/70 max-w-2xl leading-relaxed">
               {isCn
-                ? "通过对话完成视频编辑、3D创作、代码开发与数据分析"
-                : "Edit videos, build 3D scenes, code, and analyze data through conversation"}
+                ? "真正意义上的自然语言计算机控制 —— 通过对话驱动视频编辑、3D场景构建、代码开发与金融数据分析，让LLM成为你的操作系统解释层。"
+                : "True natural language computer control — drive video editing, 3D scene construction, code development, and financial data analysis through conversation, making LLM the interpretation layer of your operating system."}
+              <a
+                href="https://x.com/search?q=%23hippoxOS&f=live"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-foreground/40 hover:text-foreground/80 transition-colors ml-1 group"
+              >
+                <span className="underline decoration-foreground/20 hover:decoration-foreground/50 underline-offset-2">
+                  #hippoxOS
+                </span>
+                <ArrowUpRight className="w-3 h-3 opacity-40 group-hover:opacity-80 transition-opacity" />
+              </a>
             </p>
-            {/* Download Section */}
-            <div className="space-y-4">
+            <div className="flex items-center gap-6 text-xs text-foreground/40">
+              <a
+                href={GITHUB_REPO}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-foreground/70 transition-colors"
+              >
+                <GitHubIcon className="w-3.5 h-3.5" />
+                <span>GitHub</span>
+              </a>
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3" />
+                <span>{loading ? "..." : githubStats.stars}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <GitFork className="w-3 h-3" />
+                <span>{loading ? "..." : githubStats.forks}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Download className="w-3 h-3" />
+                <span>{loading ? "..." : githubStats.totalDownloads}</span>
+              </div>
+            </div>
+            <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
                 {(
                   Object.keys(platformConfig) as Array<
@@ -372,32 +422,7 @@ export default function Hero() {
                   : "Available on Windows · macOS · Linux"}
               </p>
             </div>
-            {/* GitHub Stats */}
-            <div className="flex items-center gap-6 pt-2 border-t border-foreground/10">
-              <a
-                href={GITHUB_REPO}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-foreground/40 hover:text-foreground/70 transition-colors"
-              >
-                <GitHubIcon className="w-4 h-4" />
-                <span className="text-xs font-medium">GitHub</span>
-              </a>
-              <div className="flex items-center gap-1.5 text-foreground/40">
-                <Star className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">
-                  {loading ? "..." : githubStats.stars}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-foreground/40">
-                <GitFork className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">
-                  {loading ? "..." : githubStats.forks}
-                </span>
-              </div>
-            </div>
           </div>
-          {/* Right Column - empty */}
           <div className="hidden lg:block" />
         </div>
       </div>

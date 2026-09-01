@@ -113,7 +113,6 @@ export default function Header() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-2.5">
-          {/* X (Twitter) - Keep original SVG */}
           <button
             type="button"
             onClick={handleXClick}
@@ -123,7 +122,6 @@ export default function Header() {
           >
             <XIcon className="w-4 h-4" />
           </button>
-          {/* GitHub - Now using GitHubIcon component */}
           <button
             type="button"
             onClick={handleGithubClick}
@@ -133,7 +131,6 @@ export default function Header() {
           >
             <GitHubIcon className="w-4 h-4" />
           </button>
-          {/* Bluesky */}
           <button
             type="button"
             onClick={handleBlueskyClick}
@@ -143,7 +140,6 @@ export default function Header() {
           >
             <BlueskyIcon className="w-4 h-4" />
           </button>
-          {/* Medium */}
           <button
             type="button"
             onClick={handleMediumClick}
@@ -153,7 +149,6 @@ export default function Header() {
           >
             <MediumIcon size={16} />
           </button>
-          {/* Discord */}
           <button
             type="button"
             onClick={handleDiscordClick}
@@ -163,7 +158,6 @@ export default function Header() {
           >
             <DiscordIcon size={16} />
           </button>
-          {/* Telegram */}
           <button
             type="button"
             onClick={handleTelegramClick}
@@ -173,7 +167,6 @@ export default function Header() {
           >
             <Send className="w-4 h-4" />
           </button>
-          {/* Theme Toggle */}
           <button
             type="button"
             onClick={toggleTheme}
@@ -186,7 +179,6 @@ export default function Header() {
               <Moon className="w-4 h-4" />
             )}
           </button>
-          {/* Language Dropdown */}
           <div
             className="relative"
             onMouseEnter={handleLangMouseEnter}
@@ -229,7 +221,6 @@ export default function Header() {
               </div>
             )}
           </div>
-          {/* WeChat - QR Code Popup */}
           <div
             className="relative"
             onMouseEnter={handleWechatMouseEnter}
@@ -243,7 +234,6 @@ export default function Header() {
             >
               <WeChatIcon className="w-4 h-4" />
             </button>
-            {/* WeChat QR Code Popup */}
             {showWechatPopup && (
               <div
                 className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
@@ -251,7 +241,6 @@ export default function Header() {
                 onMouseLeave={handleWechatMouseLeave}
               >
                 <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  {/* TODO: Replace with actual WeChat QR code image */}
                   <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
                     <QrCode className="w-12 h-12 opacity-50" />
                     <span>{isZh ? "微信二维码" : "WeChat QR Code"}</span>
@@ -266,7 +255,6 @@ export default function Header() {
               </div>
             )}
           </div>
-          {/* QQ - QR Code Popup */}
           <div
             className="relative"
             onMouseEnter={handleQQMouseEnter}
@@ -280,7 +268,6 @@ export default function Header() {
             >
               <QQIcon className="w-4 h-4" />
             </button>
-            {/* QQ QR Code Popup */}
             {showQQPopup && (
               <div
                 className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
@@ -288,7 +275,6 @@ export default function Header() {
                 onMouseLeave={handleQQMouseLeave}
               >
                 <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  {/* TODO: Replace with actual QQ QR code image */}
                   <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
                     <QrCode className="w-12 h-12 opacity-50" />
                     <span>{isZh ? "QQ 二维码" : "QQ QR Code"}</span>
