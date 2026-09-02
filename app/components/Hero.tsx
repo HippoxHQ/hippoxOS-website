@@ -16,6 +16,10 @@ import { WindowsIcon } from "../icons/WindwosIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { useTheme } from "../providers/ThemeProvider";
 import ArtText from "./arts/ArtText";
+import { ReactIcon } from "../icons/ReactIcon";
+import { RustIcon } from "../icons/RustIcon";
+import { TypeScriptIcon } from "../icons/TyprscriptIcon";
+import { TauriIcon } from "../icons/TauriIcon";
 // Platform configuration with download details - one file per platform
 const platformConfig = {
   windows: {
@@ -270,23 +274,16 @@ export default function Hero() {
   const artLightColor = isDark ? "#a78bfa" : "#4f46e5";
   return (
     <section className="relative w-full flex items-center overflow-hidden">
-      {/* Canvas for shooting stars - on top of background, behind content */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         style={{ display: "block" }}
       />
-      {/* Background layer: gradients + glows + grid + image */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {/* Base gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
-        {/* Glow effects - top left */}
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
-        {/* Glow effects - bottom right */}
         <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl" />
-        {/* Glow effects - center right */}
         <div className="absolute top-1/2 right-1/4 w-60 h-60 rounded-full bg-cyan-500/4 blur-3xl" />
-        {/* Grid texture - extremely subtle */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -297,7 +294,6 @@ export default function Hero() {
             backgroundSize: "60px 60px",
           }}
         />
-        {/* Image - right side fading */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-background/40 z-10" />
@@ -313,21 +309,17 @@ export default function Hero() {
             }}
           />
         </div>
-        {/* Bottom subtle gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
       <div className="relative w-full max-w-7xl mx-auto px-6 py-8 lg:py-12 z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Brand & Download */}
           <div className="space-y-6">
-            {/* Badge */}
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-foreground/20 bg-background/50 backdrop-blur-sm">
               <Sparkles className="w-3.5 h-3.5 text-foreground/50" />
               <span className="text-xs font-medium text-foreground/50 tracking-wider uppercase">
                 {isCn ? "LLM 原生操作系统" : "LLM-Native OS"}
               </span>
             </div>
-            {/* Title - ArtText with cursive font */}
             <div className="w-full">
               <ArtText
                 text="HippoxOS"
@@ -342,7 +334,6 @@ export default function Hero() {
                 align="left"
               />
             </div>
-            {/* Description with #hippoxOS hashtag link */}
             <p className="text-base sm:text-lg text-foreground/70 max-w-2xl leading-relaxed">
               {isCn
                 ? "真正意义上的自然语言计算机控制 —— 通过对话驱动视频编辑、3D场景构建、代码开发与金融数据分析，让LLM成为你的操作系统解释层。"
@@ -359,7 +350,6 @@ export default function Hero() {
                 <ArrowUpRight className="w-3 h-3 opacity-40 group-hover:opacity-80 transition-opacity" />
               </a>
             </p>
-            {/* Stats row - compact: GitHub, Stars, Forks, Downloads */}
             <div className="flex items-center gap-6 text-xs text-foreground/40">
               <a
                 href={GITHUB_REPO}
@@ -383,9 +373,7 @@ export default function Hero() {
                 <span>{loading ? "..." : githubStats.totalDownloads}</span>
               </div>
             </div>
-            {/* Download Section */}
             <div className="space-y-3">
-              {/* Platform selector - 3 buttons only */}
               <div className="flex flex-wrap items-center gap-2">
                 {(
                   Object.keys(platformConfig) as Array<
@@ -406,7 +394,6 @@ export default function Hero() {
                   </button>
                 ))}
               </div>
-              {/* Download button with version info */}
               <div className="flex flex-wrap items-center gap-4">
                 <a
                   href={getDownloadUrl(activePlatform)}
@@ -430,7 +417,6 @@ export default function Hero() {
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </a>
               </div>
-              {/* Version info only */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-xs text-foreground/40 font-mono">
                 <span>
                   {isCn ? "版本" : "Version"}: v{version}
@@ -441,7 +427,6 @@ export default function Hero() {
                   ? "支持 Windows · macOS · Linux"
                   : "Available on Windows · macOS · Linux"}
               </p>
-              {/* Issues & Discussions Links */}
               <div className="flex items-center gap-4 text-xs text-foreground/45 pt-1">
                 <a
                   href="https://github.com/HippoxHQ/hippoxOS/issues"
@@ -487,9 +472,14 @@ export default function Hero() {
                   <span>Discussions</span>
                 </a>
               </div>
+              <div className="flex flex-wrap items-center gap-3 pt-1 text-[10px] text-foreground/30 font-mono">
+                <RustIcon className="w-4 h-4 text-foreground/45" />
+                <TauriIcon className="w-3.5 h-3.5 text-foreground/45" />
+                <TypeScriptIcon className="w-3.5 h-3.5 text-foreground/45" />
+                <ReactIcon className="w-4 h-4 text-foreground/45" />
+              </div>
             </div>
           </div>
-          {/* Right Column - empty */}
           <div className="hidden lg:block" />
         </div>
       </div>

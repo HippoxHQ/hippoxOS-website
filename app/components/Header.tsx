@@ -122,6 +122,74 @@ export default function Header() {
           >
             <XIcon className="w-4 h-4" />
           </button>
+          <div
+            className="relative"
+            onMouseEnter={handleWechatMouseEnter}
+            onMouseLeave={handleWechatMouseLeave}
+          >
+            <button
+              type="button"
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="WeChat"
+              title={isZh ? "微信" : "WeChat"}
+            >
+              <WeChatIcon className="w-4 h-4" />
+            </button>
+            {showWechatPopup && (
+              <div
+                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
+                onMouseEnter={handleWechatMouseEnter}
+                onMouseLeave={handleWechatMouseLeave}
+              >
+                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
+                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
+                    <QrCode className="w-12 h-12 opacity-50" />
+                    <span>{isZh ? "微信二维码" : "WeChat QR Code"}</span>
+                    <span className="text-[10px] opacity-60">
+                      {isZh ? "（预留）" : "(Placeholder)"}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {isZh ? "扫码关注公众号" : "Scan to follow"}
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className="relative"
+            onMouseEnter={handleQQMouseEnter}
+            onMouseLeave={handleQQMouseLeave}
+          >
+            <button
+              type="button"
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="QQ"
+              title={isZh ? "QQ" : "QQ"}
+            >
+              <QQIcon className="w-4 h-4" />
+            </button>
+            {showQQPopup && (
+              <div
+                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
+                onMouseEnter={handleQQMouseEnter}
+                onMouseLeave={handleQQMouseLeave}
+              >
+                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
+                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
+                    <QrCode className="w-12 h-12 opacity-50" />
+                    <span>{isZh ? "QQ 二维码" : "QQ QR Code"}</span>
+                    <span className="text-[10px] opacity-60">
+                      {isZh ? "（预留）" : "(Placeholder)"}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {isZh ? "扫码加群" : "Scan to join group"}
+                </div>
+              </div>
+            )}
+          </div>
           <button
             type="button"
             onClick={handleGithubClick}
@@ -218,74 +286,6 @@ export default function Header() {
                 >
                   English
                 </button>
-              </div>
-            )}
-          </div>
-          <div
-            className="relative"
-            onMouseEnter={handleWechatMouseEnter}
-            onMouseLeave={handleWechatMouseLeave}
-          >
-            <button
-              type="button"
-              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-              aria-label="WeChat"
-              title={isZh ? "微信" : "WeChat"}
-            >
-              <WeChatIcon className="w-4 h-4" />
-            </button>
-            {showWechatPopup && (
-              <div
-                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
-                onMouseEnter={handleWechatMouseEnter}
-                onMouseLeave={handleWechatMouseLeave}
-              >
-                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
-                    <QrCode className="w-12 h-12 opacity-50" />
-                    <span>{isZh ? "微信二维码" : "WeChat QR Code"}</span>
-                    <span className="text-[10px] opacity-60">
-                      {isZh ? "（预留）" : "(Placeholder)"}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {isZh ? "扫码关注公众号" : "Scan to follow"}
-                </div>
-              </div>
-            )}
-          </div>
-          <div
-            className="relative"
-            onMouseEnter={handleQQMouseEnter}
-            onMouseLeave={handleQQMouseLeave}
-          >
-            <button
-              type="button"
-              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-              aria-label="QQ"
-              title={isZh ? "QQ" : "QQ"}
-            >
-              <QQIcon className="w-4 h-4" />
-            </button>
-            {showQQPopup && (
-              <div
-                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
-                onMouseEnter={handleQQMouseEnter}
-                onMouseLeave={handleQQMouseLeave}
-              >
-                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
-                    <QrCode className="w-12 h-12 opacity-50" />
-                    <span>{isZh ? "QQ 二维码" : "QQ QR Code"}</span>
-                    <span className="text-[10px] opacity-60">
-                      {isZh ? "（预留）" : "(Placeholder)"}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {isZh ? "扫码加群" : "Scan to join group"}
-                </div>
               </div>
             )}
           </div>

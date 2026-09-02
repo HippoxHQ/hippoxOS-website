@@ -227,7 +227,7 @@ export default function VideoShowcase() {
     );
   };
   return (
-    <section className="w-full py-8">
+    <section className="w-full py-5">
       <div className="flex items-center justify-between mb-4 px-1">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-foreground">
