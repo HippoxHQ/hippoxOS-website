@@ -2,16 +2,8 @@
 "use client";
 import { useI18n } from "../providers/I18nProvider";
 import { useTheme } from "../providers/ThemeProvider";
-import { useState, useRef } from "react";
-import {
-  Moon,
-  Sun,
-  MessageCircle,
-  Send,
-  Globe,
-  ChevronDown,
-  QrCode,
-} from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Moon, Sun, Send, Globe, ChevronDown, QrCode } from "lucide-react";
 import { DiscordIcon } from "../icons/DiscordIcon";
 import { MediumIcon } from "../icons/MediumIcon";
 import { BlueskyIcon } from "../icons/BlueskyIcon";
@@ -30,6 +22,16 @@ export default function Header() {
   const [showQQPopup, setShowQQPopup] = useState(false);
   const wechatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const qqTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200,
+  );
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const handleLangMouseEnter = () => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
@@ -55,13 +57,10 @@ export default function Header() {
   const handleMediumClick = () => {
     window.open("https://hippox.medium.com/", "_blank");
   };
-  // Discord and Telegram - placeholders for now
   const handleDiscordClick = () => {
-    // TODO: Replace with actual Discord invite link
     window.open("https://discord.gg/hippox", "_blank");
   };
   const handleTelegramClick = () => {
-    // TODO: Replace with actual Telegram group link
     window.open("https://t.me/hippox", "_blank");
   };
   const handleCargoClick = () => {
@@ -113,128 +112,144 @@ export default function Header() {
         </div>
         <div className="flex-1" />
         <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={handleXClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="X (Twitter)"
-            title={isZh ? "访问 X 账号" : "Visit X account"}
-          >
-            <XIcon className="w-4 h-4" />
-          </button>
-          <div
-            className="relative"
-            onMouseEnter={handleWechatMouseEnter}
-            onMouseLeave={handleWechatMouseLeave}
-          >
+          {windowWidth >= 900 && (
             <button
               type="button"
+              onClick={handleXClick}
               className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-              aria-label="WeChat"
-              title={isZh ? "微信" : "WeChat"}
+              aria-label="X (Twitter)"
+              title={isZh ? "访问 X 账号" : "Visit X account"}
             >
-              <WeChatIcon className="w-4 h-4" />
+              <XIcon className="w-4 h-4" />
             </button>
-            {showWechatPopup && (
-              <div
-                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
-                onMouseEnter={handleWechatMouseEnter}
-                onMouseLeave={handleWechatMouseLeave}
+          )}
+          {windowWidth >= 700 && (
+            <div
+              className="relative"
+              onMouseEnter={handleWechatMouseEnter}
+              onMouseLeave={handleWechatMouseLeave}
+            >
+              <button
+                type="button"
+                className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+                aria-label="WeChat"
+                title={isZh ? "微信" : "WeChat"}
               >
-                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
-                    <QrCode className="w-12 h-12 opacity-50" />
-                    <span>{isZh ? "微信二维码" : "WeChat QR Code"}</span>
-                    <span className="text-[10px] opacity-60">
-                      {isZh ? "（预留）" : "(Placeholder)"}
-                    </span>
+                <WeChatIcon className="w-4 h-4" />
+              </button>
+              {showWechatPopup && (
+                <div
+                  className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
+                  onMouseEnter={handleWechatMouseEnter}
+                  onMouseLeave={handleWechatMouseLeave}
+                >
+                  <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
+                    <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
+                      <QrCode className="w-12 h-12 opacity-50" />
+                      <span>{isZh ? "微信二维码" : "WeChat QR Code"}</span>
+                      <span className="text-[10px] opacity-60">
+                        {isZh ? "（预留）" : "(Placeholder)"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {isZh ? "扫码关注公众号" : "Scan to follow"}
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {isZh ? "扫码关注公众号" : "Scan to follow"}
+              )}
+            </div>
+          )}
+          {windowWidth >= 700 && (
+            <div
+              className="relative"
+              onMouseEnter={handleQQMouseEnter}
+              onMouseLeave={handleQQMouseLeave}
+            >
+              <button
+                type="button"
+                className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+                aria-label="QQ"
+                title={isZh ? "QQ" : "QQ"}
+              >
+                <QQIcon className="w-4 h-4" />
+              </button>
+              {showQQPopup && (
+                <div
+                  className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
+                  onMouseEnter={handleQQMouseEnter}
+                  onMouseLeave={handleQQMouseLeave}
+                >
+                  <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
+                    <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
+                      <QrCode className="w-12 h-12 opacity-50" />
+                      <span>{isZh ? "QQ 二维码" : "QQ QR Code"}</span>
+                      <span className="text-[10px] opacity-60">
+                        {isZh ? "（预留）" : "(Placeholder)"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {isZh ? "扫码加群" : "Scan to join group"}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-          <div
-            className="relative"
-            onMouseEnter={handleQQMouseEnter}
-            onMouseLeave={handleQQMouseLeave}
-          >
+              )}
+            </div>
+          )}
+          {windowWidth >= 550 && (
             <button
               type="button"
+              onClick={handleGithubClick}
               className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-              aria-label="QQ"
-              title={isZh ? "QQ" : "QQ"}
+              aria-label="GitHub"
+              title={isZh ? "访问 GitHub 组织" : "Visit GitHub organization"}
             >
-              <QQIcon className="w-4 h-4" />
+              <GitHubIcon className="w-4 h-4" />
             </button>
-            {showQQPopup && (
-              <div
-                className="absolute right-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 p-4 text-center"
-                onMouseEnter={handleQQMouseEnter}
-                onMouseLeave={handleQQMouseLeave}
-              >
-                <div className="aspect-square w-full max-w-[160px] mx-auto bg-muted rounded flex items-center justify-center">
-                  <div className="text-xs text-muted-foreground flex flex-col items-center gap-1">
-                    <QrCode className="w-12 h-12 opacity-50" />
-                    <span>{isZh ? "QQ 二维码" : "QQ QR Code"}</span>
-                    <span className="text-[10px] opacity-60">
-                      {isZh ? "（预留）" : "(Placeholder)"}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {isZh ? "扫码加群" : "Scan to join group"}
-                </div>
-              </div>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={handleGithubClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="GitHub"
-            title={isZh ? "访问 GitHub 组织" : "Visit GitHub organization"}
-          >
-            <GitHubIcon className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleBlueskyClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="Bluesky"
-            title={isZh ? "访问 Bluesky 账号" : "Visit Bluesky account"}
-          >
-            <BlueskyIcon className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleMediumClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="Medium"
-            title={isZh ? "访问 Medium 博客" : "Visit Medium blog"}
-          >
-            <MediumIcon size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={handleDiscordClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="Discord"
-            title={isZh ? "加入 Discord 社区" : "Join Discord community"}
-          >
-            <DiscordIcon size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={handleTelegramClick}
-            className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
-            aria-label="Telegram"
-            title={isZh ? "加入 Telegram 群组" : "Join Telegram group"}
-          >
-            <Send className="w-4 h-4" />
-          </button>
+          )}
+          {windowWidth >= 900 && (
+            <button
+              type="button"
+              onClick={handleBlueskyClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Bluesky"
+              title={isZh ? "访问 Bluesky 账号" : "Visit Bluesky account"}
+            >
+              <BlueskyIcon className="w-4 h-4" />
+            </button>
+          )}
+          {windowWidth >= 900 && (
+            <button
+              type="button"
+              onClick={handleMediumClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Medium"
+              title={isZh ? "访问 Medium 博客" : "Visit Medium blog"}
+            >
+              <MediumIcon size={16} />
+            </button>
+          )}
+          {windowWidth >= 1000 && (
+            <button
+              type="button"
+              onClick={handleDiscordClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Discord"
+              title={isZh ? "加入 Discord 社区" : "Join Discord community"}
+            >
+              <DiscordIcon size={16} />
+            </button>
+          )}
+          {windowWidth >= 1000 && (
+            <button
+              type="button"
+              onClick={handleTelegramClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Telegram"
+              title={isZh ? "加入 Telegram 群组" : "Join Telegram group"}
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          )}
           <button
             type="button"
             onClick={toggleTheme}
