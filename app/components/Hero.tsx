@@ -311,7 +311,7 @@ export default function Hero() {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/5 to-transparent" />
       </div>
-      <div className="relative w-full max-w-7xl mx-auto px-6 py-8 lg:py-12 z-30">
+      <div className="relative w-full max-w-[calc(100%-200px)] mx-auto px-6 py-8 lg:py-12 z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-foreground/20 bg-background/50 backdrop-blur-sm">

@@ -51,27 +51,20 @@ export default function HomePage() {
       <div className="flex-1 overflow-y-auto scrollable-content">
         {/* Hero - full width */}
         <Hero />
+        {/* LLM List */}
         <LLMList />
-        {/* Function List - full width with max-w constraint */}
-        <div className="max-w-7xl mx-auto px-6">
+        {/* Main content with 150px horizontal padding on both sides */}
+        <div className="px-[50px]">
           <FunctionList />
           <VideoShowcase />
           <News />
           <SystemRequirements />
           <FAQ />
         </div>
-        {/* Rest of content */}
-        {/* <div className="max-w-5xl mx-auto px-6 py-4 space-y-5">
-          <div className="grid grid-cols-2 gap-5">
-            <SatelliteProjects
-              onSelectRepo={handleSelectRepo}
-              selectedRepoName={selectedRepo?.name}
-            />
-            <DocsList />
-          </div>
-        </div> */}
+        {/* Footer */}
         <Footer />
       </div>
+      {/* Scroll to top button */}
       <button
         onClick={scrollToTop}
         className={`
@@ -91,7 +84,7 @@ export default function HomePage() {
               : "opacity-0 translate-y-16 pointer-events-none"
           }
         `}
-        aria-label="滚动到顶部"
+        aria-label="Scroll to top"
       >
         <ArrowUp className="w-5 h-5" />
       </button>
