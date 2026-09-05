@@ -11,6 +11,7 @@ import { WeChatIcon } from "../icons/WeChatIcon";
 import { QQIcon } from "../icons/QQIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { XIcon } from "../icons/XIcon";
+import HuggingFaceIcon from "../icons/HuggingfaceIcon";
 export default function Header() {
   const { locale, setLocale } = useI18n();
   const { theme, toggleTheme } = useTheme();
@@ -47,6 +48,9 @@ export default function Header() {
   // Social link handlers
   const handleGithubClick = () => {
     window.open("https://github.com/HippoxHQ", "_blank");
+  };
+  const handleHuggingFaceClick = () => {
+    window.open("https://huggingface.co/HippoxHQ", "_blank");
   };
   const handleXClick = () => {
     window.open("https://x.com/HippoxAI", "_blank");
@@ -121,6 +125,18 @@ export default function Header() {
               title={isZh ? "访问 X 账号" : "Visit X account"}
             >
               <XIcon className="w-4 h-4" />
+            </button>
+          )}
+          {/* Hugging Face 按钮 - 宽度 >= 700 时显示 */}
+          {windowWidth >= 700 && (
+            <button
+              type="button"
+              onClick={handleHuggingFaceClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Hugging Face"
+              title={isZh ? "访问 Hugging Face" : "Visit Hugging Face"}
+            >
+              <HuggingFaceIcon className="w-4 h-4" />
             </button>
           )}
           {windowWidth >= 700 && (

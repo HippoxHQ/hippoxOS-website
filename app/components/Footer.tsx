@@ -6,6 +6,19 @@ import { MediumIcon } from "../icons/MediumIcon";
 import { BlueskyIcon } from "../icons/BlueskyIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { XIcon } from "../icons/XIcon";
+const HuggingFaceIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+    <circle cx="9" cy="11" r="1.5" />
+    <circle cx="15" cy="11" r="1.5" />
+  </svg>
+);
 export default function Footer() {
   const { locale } = useI18n();
   const isCn = locale === "cn";
@@ -27,6 +40,7 @@ export default function Footer() {
           href: "https://hippox-docs-en.vercel.app/",
         },
         { label: "GitHub", href: "https://github.com/HippoxHQ/hippoxOS" },
+        { label: "Hugging Face", href: "https://huggingface.co/HippoxHQ" },
         { label: isCn ? "博客" : "Blog", href: "https://hippox.medium.com/" },
         { label: isCn ? "API 参考" : "API Reference", href: "#" },
       ],
@@ -58,6 +72,11 @@ export default function Footer() {
   ];
   const socialLinks = [
     { icon: GitHubIcon, href: "https://github.com/HippoxHQ", label: "GitHub" },
+    {
+      icon: HuggingFaceIcon,
+      href: "https://huggingface.co/HippoxHQ",
+      label: "Hugging Face",
+    },
     { icon: XIcon, href: "https://x.com/HippoxAI", label: "X" },
     {
       icon: BlueskyIcon,
