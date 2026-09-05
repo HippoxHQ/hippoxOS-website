@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
   Star,
   GitFork,
+  X,
 } from "lucide-react";
 import { LinuxIcon } from "../icons/LinuxIcon";
 import { MacOSIcon } from "../icons/MacOSIcon";
@@ -70,7 +71,10 @@ export default function Hero() {
   });
   const [version, setVersion] = useState<string>("0.0.0");
   const [loading, setLoading] = useState(true);
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const [bubblePosition, setBubblePosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const downloadBtnRef = useRef<HTMLAnchorElement>(null);
   // Fetch GitHub repository data
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -261,6 +265,26 @@ export default function Hero() {
     };
   }, [isDark]);
   const currentPlatform = platformConfig[activePlatform];
+  const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Get button position for bubble placement
+    const rect = downloadBtnRef.current?.getBoundingClientRect();
+    if (rect) {
+      setBubblePosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10,
+      });
+    }
+    setShowComingSoon(true);
+    // Auto hide after 2.5 seconds
+    setTimeout(() => {
+      setShowComingSoon(false);
+    }, 2500);
+  };
+  const closeBubble = () => {
+    setShowComingSoon(false);
+  };
   const getDownloadUrl = (platform: string) => {
     const fileMap: Record<string, string> = {
       windows: `hippoxOS_windows_x86_64_v${version}.msi`,
@@ -279,6 +303,76 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         style={{ display: "block" }}
       />
+      {/* Coming Soon Bubble */}
+      {showComingSoon && (
+        <div
+          className="fixed z-50 animate-in fade-in zoom-in duration-200"
+          style={{
+            left: bubblePosition.x,
+            top: bubblePosition.y,
+            transform: "translate(-50%, -100%)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="relative">
+            {/* Bubble arrow */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
+              <div
+                className="w-3 h-3 rotate-45 border-r border-b"
+                style={{
+                  backgroundColor: isDark ? "#1a1a2e" : "#ffffff",
+                  borderColor: isDark
+                    ? "rgba(255,255,255,0.1)"
+                    : "rgba(0,0,0,0.08)",
+                }}
+              />
+            </div>
+            {/* Bubble content */}
+            <div
+              className="px-5 py-3 rounded-xl shadow-2xl border backdrop-blur-sm min-w-[160px] text-center"
+              style={{
+                backgroundColor: isDark
+                  ? "rgba(26, 26, 46, 0.95)"
+                  : "rgba(255, 255, 255, 0.95)",
+                borderColor: isDark
+                  ? "rgba(255,255,255,0.08)"
+                  : "rgba(0,0,0,0.06)",
+                boxShadow: isDark
+                  ? "0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(167, 139, 250, 0.1)"
+                  : "0 20px 60px rgba(0,0,0,0.12), 0 0 40px rgba(79, 70, 229, 0.06)",
+              }}
+            >
+              <button
+                onClick={closeBubble}
+                className="absolute -top-2 -right-2 p-1 rounded-full hover:bg-foreground/10 transition-colors"
+                style={{
+                  backgroundColor: isDark
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(0,0,0,0.05)",
+                }}
+              >
+                <X className="w-3 h-3 text-foreground/50" />
+              </button>
+              <div className="flex flex-col items-center gap-1">
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: isDark ? "#e8edf2" : "#1a1a2e" }}
+                >
+                  🚀 {isCn ? "即将推出" : "Coming Soon"}
+                </span>
+                <span
+                  className="text-xs opacity-60"
+                  style={{ color: isDark ? "#a0a0b8" : "#666" }}
+                >
+                  {isCn
+                    ? "本月10-15日上线，敬请期待！"
+                    : "Coming Oct 10-15, stay tuned!"}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
@@ -396,10 +490,10 @@ export default function Hero() {
               </div>
               <div className="flex flex-wrap items-center gap-4">
                 <a
-                  href={getDownloadUrl(activePlatform)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:bg-foreground/80 transition-all duration-200 shadow-lg shadow-foreground/10 hover:shadow-foreground/20"
+                  ref={downloadBtnRef}
+                  href="#"
+                  onClick={handleDownloadClick}
+                  className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:bg-foreground/80 transition-all duration-200 shadow-lg shadow-foreground/10 hover:shadow-foreground/20 cursor-pointer"
                 >
                   <Download className="w-4 h-4" />
                   <span>
