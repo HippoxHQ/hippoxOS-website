@@ -502,7 +502,7 @@ export default function Hero() {
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </a>
                 <a
-                  href={GITHUB_REPO}
+                  href="https://hippoxos-docs.vercel.app/en"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-foreground/50 hover:text-foreground transition-colors"
