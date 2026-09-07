@@ -37,24 +37,24 @@ export default function Footer() {
       links: [
         {
           label: isCn ? "文档" : "Documentation",
-          href: "https://hippox-docs-en.vercel.app/",
+          href: "https://hippoxos-docs.vercel.app/en",
         },
         { label: "GitHub", href: "https://github.com/HippoxHQ/hippoxOS" },
         { label: "Hugging Face", href: "https://huggingface.co/HippoxHQ" },
         { label: isCn ? "博客" : "Blog", href: "https://hippox.medium.com/" },
-        { label: isCn ? "API 参考" : "API Reference", href: "#" },
+        // { label: isCn ? "API 参考" : "API Reference", href: "#" },
       ],
     },
     {
       title: isCn ? "社区" : "Community",
       links: [
-        { label: "Discord", href: "https://discord.gg/hippox" },
-        { label: "X", href: "https://x.com/HippoxAI" },
+        { label: "Discord", href: "https://discord.gg/R7hrkJRAdE" },
+        { label: "X", href: "https://t.me/hippoxAI" },
         {
           label: "Bluesky",
           href: "https://bsky.app/profile/hippoxai.bsky.social",
         },
-        { label: "Telegram", href: "https://t.me/hippox" },
+        { label: "Telegram", href: "https://t.me/hippoxAI" },
       ],
     },
     {
@@ -91,11 +91,11 @@ export default function Footer() {
     },
     {
       icon: DiscordIcon,
-      href: "https://discord.gg/hippox",
+      href: "https://discord.gg/R7hrkJRAdE",
       label: "Discord",
       size: 16,
     },
-    { icon: Send, href: "https://t.me/hippox", label: "Telegram" },
+    { icon: Send, href: "https://t.me/hippoxAI", label: "Telegram" },
   ];
   return (
     <footer className="w-full border-t border-border/40 bg-background/30 backdrop-blur-sm">

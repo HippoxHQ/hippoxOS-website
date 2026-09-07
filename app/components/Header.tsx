@@ -62,10 +62,10 @@ export default function Header() {
     window.open("https://hippox.medium.com/", "_blank");
   };
   const handleDiscordClick = () => {
-    window.open("https://discord.gg/hippox", "_blank");
+    window.open("https://discord.gg/R7hrkJRAdE", "_blank");
   };
   const handleTelegramClick = () => {
-    window.open("https://t.me/hippox", "_blank");
+    window.open("https://t.me/hippoxAI", "_blank");
   };
   const handleCargoClick = () => {
     window.open("https://crates.io/crates/hippox", "_blank");
