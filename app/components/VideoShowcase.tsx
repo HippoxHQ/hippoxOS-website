@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useI18n } from "../providers/I18nProvider";
 import { Play, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { YouTubeIcon } from "../icons/YouTubeIcon";
@@ -13,68 +13,30 @@ interface VideoItem {
   channelZh: string;
   duration: string;
 }
-const videos: VideoItem[] = [
+// English video list - Add new videos here
+const enVideos: VideoItem[] = [
+  {
+    id: "1",
+    title: "HippoxOS - What Does System-Level LLM Control Actually Look Like?",
+    titleZh: "HippoxOS - 所謂的「系統級LLM控制」, 實際長什麼樣？",
+    platform: "youtube",
+    embedUrl: "https://www.youtube.com/embed/AztnqP6RXjo?si=3RvCK7dLWx0JSk3T",
+    channel: "HippoxOS",
+    channelZh: "HippoxOS",
+    duration: "1.32",
+  },
+];
+// Chinese video list - Add new videos here
+const cnVideos: VideoItem[] = [
   {
     id: "1",
     title: "HippoxOS - LLM-Native Operating System Overview",
-    titleZh: "HippoxOS - LLM 原生操作系统概览",
+    titleZh: "HippoxOS - 所謂的「系統級LLM控制」, 實際長什麼樣？",
     platform: "youtube",
-    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    channel: "HippoxOS Official",
-    channelZh: "HippoxOS 官方",
-    duration: "2:30",
-  },
-  {
-    id: "2",
-    title: "AI Video Editing with HippoxOS",
-    titleZh: "使用 HippoxOS 进行 AI 视频编辑",
-    platform: "youtube",
-    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    channel: "Tech Reviews",
-    channelZh: "科技评测",
-    duration: "5:12",
-  },
-  {
-    id: "3",
-    title: "3D Scene Generation in HippoxOS",
-    titleZh: "HippoxOS 中的 3D 场景生成",
-    platform: "bilibili",
-    embedUrl:
-      "https://player.bilibili.com/player.html?bvid=BV1GJ411x7f7&autoplay=0",
+    embedUrl: "https://www.youtube.com/embed/XZwXXc2r6rg?si=8JlX6oG4n2Mu41f5",
     channel: "HippoxOS",
     channelZh: "HippoxOS",
-    duration: "3:45",
-  },
-  {
-    id: "4",
-    title: "Financial Data Analysis with HippoxOS",
-    titleZh: "HippoxOS 金融数据分析",
-    platform: "youtube",
-    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    channel: "Data Science Hub",
-    channelZh: "数据科学中心",
-    duration: "4:20",
-  },
-  {
-    id: "5",
-    title: "HippoxOS - Getting Started Guide",
-    titleZh: "HippoxOS - 快速入门指南",
-    platform: "youtube",
-    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    channel: "HippoxOS Official",
-    channelZh: "HippoxOS 官方",
-    duration: "6:15",
-  },
-  {
-    id: "6",
-    title: "Advanced 3D Scene Techniques",
-    titleZh: "高级 3D 场景技术",
-    platform: "bilibili",
-    embedUrl:
-      "https://player.bilibili.com/player.html?bvid=BV1GJ411x7f7&autoplay=0",
-    channel: "HippoxOS",
-    channelZh: "HippoxOS",
-    duration: "8:30",
+    duration: "1.32",
   },
 ];
 const platformLabels = {
@@ -86,15 +48,17 @@ const platformLabels = {
 const VideoCard = ({
   video,
   onPlay,
+  width,
 }: {
   video: VideoItem;
   onPlay: (video: VideoItem) => void;
+  width?: string;
 }) => {
   const { locale } = useI18n();
   const isCn = locale === "cn";
   return (
     <div
-      className="group relative rounded-lg overflow-hidden cursor-pointer bg-background border border-border/40 transition-all duration-300 hover:border-border/80 hover:shadow-xl hover:shadow-foreground/5 flex-shrink-0 w-[280px]"
+      className={`group relative rounded-lg overflow-hidden cursor-pointer bg-background border border-border/40 transition-all duration-300 hover:border-border/80 hover:shadow-xl hover:shadow-foreground/5 flex-shrink-0 ${width || "w-[280px]"}`}
       onClick={() => onPlay(video)}
     >
       <div className="relative aspect-video bg-black">
@@ -105,9 +69,9 @@ const VideoCard = ({
           loading="lazy"
         />
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/20 transition-all duration-300">
-          {/* <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-background shadow-2xl transform scale-90 group-hover:scale-110 transition-transform duration-300">
+          <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-background shadow-2xl transform scale-90 group-hover:scale-110 transition-transform duration-300">
             <Play className="w-5 h-5 ml-0.5" />
-          </div> */}
+          </div>
         </div>
         <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium">
           <span>{platformLabels[video.platform]}</span>
@@ -149,7 +113,7 @@ const VideoPlayer = ({
       >
         <div className="flex items-center justify-between px-4 py-3 bg-background border-b border-border/40">
           <h3 className="text-sm font-medium text-foreground truncate">
-            {/* {isCn ? video.titleZh : video.title} */}
+            {isCn ? video.titleZh : video.title}
           </h3>
           <button
             onClick={onClose}
@@ -201,10 +165,25 @@ const VideoPlayer = ({
 export default function VideoShowcase() {
   const { locale } = useI18n();
   const isCn = locale === "cn";
+  // Get the appropriate video list based on current locale
+  const currentVideos = isCn ? cnVideos : enVideos;
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  // Determine layout mode based on video count
+  const videoCount = currentVideos.length;
+  const isSingleVideo = videoCount === 1;
+  const isTwoVideos = videoCount === 2;
+  const isThreeVideos = videoCount === 3;
+  const isFourOrMore = videoCount >= 4;
+  // Calculate width for non-scrolling layouts
+  const getVideoWidth = () => {
+    if (isSingleVideo) return "w-full";
+    if (isTwoVideos) return "w-1/2";
+    if (isThreeVideos) return "w-1/3";
+    return "w-[280px]"; // Default card width for scrolling
+  };
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -226,23 +205,35 @@ export default function VideoShowcase() {
       container.scrollLeft < container.scrollWidth - container.clientWidth - 20,
     );
   };
-  return (
-    <section className="w-full py-5">
-      <div className="flex items-center justify-between mb-4 px-1">
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground">
-            {isCn ? "视频展示" : "Video Showcase"}
-          </h2>
-          <p className="text-xs text-foreground/40 mt-0.5">
-            {isCn
-              ? "观看 HippoxOS 的相关视频和教程"
-              : "Watch HippoxOS videos and tutorials"}
-          </p>
+  // Update scroll button visibility when videos change or window resizes
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container && isFourOrMore) {
+      handleScroll();
+    }
+  }, [currentVideos, isFourOrMore]);
+  // Render videos in grid or scroll layout
+  const renderVideos = () => {
+    const videoWidth = getVideoWidth();
+    if (isSingleVideo || isTwoVideos || isThreeVideos) {
+      // Grid layout with equal width distribution
+      return (
+        <div
+          className={`grid gap-4 ${isSingleVideo ? "grid-cols-1" : isTwoVideos ? "grid-cols-2" : "grid-cols-3"}`}
+        >
+          {currentVideos.map((video) => (
+            <VideoCard
+              key={video.id}
+              video={video}
+              onPlay={setSelectedVideo}
+              width="w-full"
+            />
+          ))}
         </div>
-        <div className="text-[10px] text-foreground/20 font-mono">
-          {videos.length} {isCn ? "个视频" : "videos"}
-        </div>
-      </div>
+      );
+    }
+    // Scroll layout for 4 or more videos
+    return (
       <div className="relative">
         {canScrollLeft && (
           <button
@@ -265,11 +256,36 @@ export default function VideoShowcase() {
           className="flex gap-4 overflow-x-auto scroll-smooth pb-2 hide-scrollbar"
           onScroll={handleScroll}
         >
-          {videos.map((video) => (
-            <VideoCard key={video.id} video={video} onPlay={setSelectedVideo} />
+          {currentVideos.map((video) => (
+            <VideoCard
+              key={video.id}
+              video={video}
+              onPlay={setSelectedVideo}
+              width="w-[280px]"
+            />
           ))}
         </div>
       </div>
+    );
+  };
+  return (
+    <section className="w-full py-5">
+      <div className="flex items-center justify-between mb-4 px-1">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
+            {isCn ? "视频展示" : "Video Showcase"}
+          </h2>
+          <p className="text-xs text-foreground/40 mt-0.5">
+            {isCn
+              ? "观看 HippoxOS 的相关视频和教程"
+              : "Watch HippoxOS videos and tutorials"}
+          </p>
+        </div>
+        <div className="text-[10px] text-foreground/20 font-mono">
+          {currentVideos.length} {isCn ? "个视频" : "videos"}
+        </div>
+      </div>
+      {renderVideos()}
       <VideoPlayer
         video={selectedVideo}
         onClose={() => setSelectedVideo(null)}

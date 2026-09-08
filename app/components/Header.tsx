@@ -12,25 +12,22 @@ import { QQIcon } from "../icons/QQIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { XIcon } from "../icons/XIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
+import { YouTubeIcon } from "../icons/YouTubeIcon";
 import HuggingFaceIcon from "../icons/HuggingfaceIcon";
-
 export default function Header() {
   const { locale, setLocale } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const isZh = locale === "cn";
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   // Social popup state
   const [showWechatPopup, setShowWechatPopup] = useState(false);
   const [showQQPopup, setShowQQPopup] = useState(false);
   const wechatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const qqTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
   );
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -38,7 +35,6 @@ export default function Header() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   const handleLangMouseEnter = () => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
@@ -46,50 +42,42 @@ export default function Header() {
     }
     setShowLangDropdown(true);
   };
-
   const handleLangMouseLeave = () => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setShowLangDropdown(false);
     }, 150);
   };
-
   // Social link handlers
   const handleGithubClick = () => {
     window.open("https://github.com/HippoxHQ", "_blank");
   };
-
   const handleHuggingFaceClick = () => {
     window.open("https://huggingface.co/HippoxHQ", "_blank");
   };
-
   const handleXClick = () => {
     window.open("https://x.com/HippoxAI", "_blank");
   };
-
+  const handleYouTubeClick = () => {
+    window.open("https://www.youtube.com/@HippoxOS", "_blank");
+  };
   const handleBlueskyClick = () => {
     window.open("https://bsky.app/profile/hippoxai.bsky.social", "_blank");
   };
-
   const handleMediumClick = () => {
     window.open("https://hippox.medium.com/", "_blank");
   };
-
   const handleDiscordClick = () => {
     window.open("https://discord.gg/R7hrkJRAdE", "_blank");
   };
-
   const handleTelegramClick = () => {
     window.open("https://t.me/hippoxAI", "_blank");
   };
-
   const handleCargoClick = () => {
     window.open("https://crates.io/crates/hippox", "_blank");
   };
-
   const handleFacebookClick = () => {
     window.open("https://www.facebook.com/groups/5510896799134952", "_blank");
   };
-
   // WeChat popup handlers
   const handleWechatMouseEnter = () => {
     if (wechatTimeoutRef.current) {
@@ -98,13 +86,11 @@ export default function Header() {
     }
     setShowWechatPopup(true);
   };
-
   const handleWechatMouseLeave = () => {
     wechatTimeoutRef.current = setTimeout(() => {
       setShowWechatPopup(false);
     }, 200);
   };
-
   // QQ popup handlers
   const handleQQMouseEnter = () => {
     if (qqTimeoutRef.current) {
@@ -113,13 +99,11 @@ export default function Header() {
     }
     setShowQQPopup(true);
   };
-
   const handleQQMouseLeave = () => {
     qqTimeoutRef.current = setTimeout(() => {
       setShowQQPopup(false);
     }, 200);
   };
-
   return (
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-6 h-14">
@@ -138,9 +122,7 @@ export default function Header() {
             </span>
           </div>
         </div>
-
         <div className="flex-1" />
-
         <div className="flex items-center gap-2.5">
           {windowWidth >= 900 && (
             <button
@@ -153,7 +135,17 @@ export default function Header() {
               <XIcon className="w-4 h-4" />
             </button>
           )}
-
+          {windowWidth >= 1000 && (
+            <button
+              type="button"
+              onClick={handleYouTubeClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="YouTube"
+              title={isZh ? "访问 YouTube 频道" : "Visit YouTube channel"}
+            >
+              <YouTubeIcon className="w-4 h-4" />
+            </button>
+          )}
           {/* Hugging Face button - visible when width >= 700 */}
           {windowWidth >= 700 && (
             <button
@@ -166,7 +158,6 @@ export default function Header() {
               <HuggingFaceIcon className="w-4 h-4" />
             </button>
           )}
-
           {/* Facebook button - visible when width >= 700 */}
           {windowWidth >= 700 && (
             <button
@@ -179,7 +170,6 @@ export default function Header() {
               <FacebookIcon className="w-4 h-4" />
             </button>
           )}
-
           {windowWidth >= 700 && (
             <div
               className="relative"
@@ -216,7 +206,6 @@ export default function Header() {
               )}
             </div>
           )}
-
           {windowWidth >= 700 && (
             <div
               className="relative"
@@ -253,7 +242,6 @@ export default function Header() {
               )}
             </div>
           )}
-
           {windowWidth >= 550 && (
             <button
               type="button"
@@ -265,7 +253,6 @@ export default function Header() {
               <GitHubIcon className="w-4 h-4" />
             </button>
           )}
-
           {windowWidth >= 900 && (
             <button
               type="button"
@@ -277,7 +264,6 @@ export default function Header() {
               <BlueskyIcon className="w-4 h-4" />
             </button>
           )}
-
           {windowWidth >= 900 && (
             <button
               type="button"
@@ -289,7 +275,6 @@ export default function Header() {
               <MediumIcon size={16} />
             </button>
           )}
-
           {windowWidth >= 1000 && (
             <button
               type="button"
@@ -301,7 +286,6 @@ export default function Header() {
               <DiscordIcon size={16} />
             </button>
           )}
-
           {windowWidth >= 1000 && (
             <button
               type="button"
@@ -313,7 +297,6 @@ export default function Header() {
               <Send className="w-4 h-4" />
             </button>
           )}
-
           <button
             type="button"
             onClick={toggleTheme}
@@ -326,7 +309,6 @@ export default function Header() {
               <Moon className="w-4 h-4" />
             )}
           </button>
-
           <div
             className="relative"
             onMouseEnter={handleLangMouseEnter}

@@ -56,7 +56,7 @@ export default function HomePage() {
         {/* Main content with 150px horizontal padding on both sides */}
         <div className="px-[50px]">
           <FunctionList />
-          {/* <VideoShowcase /> */}
+          <VideoShowcase />
           {/* <News /> */}
           <SystemRequirements />
           <FAQ />
