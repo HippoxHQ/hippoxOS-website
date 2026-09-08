@@ -6,22 +6,13 @@ import { MediumIcon } from "../icons/MediumIcon";
 import { BlueskyIcon } from "../icons/BlueskyIcon";
 import { GitHubIcon } from "../icons/GitHubIcon";
 import { XIcon } from "../icons/XIcon";
-const HuggingFaceIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
-    <circle cx="9" cy="11" r="1.5" />
-    <circle cx="15" cy="11" r="1.5" />
-  </svg>
-);
+import { FacebookIcon } from "../icons/FacebookIcon";
+import { YouTubeIcon } from "../icons/YouTubeIcon";
+import HuggingFaceIcon from "../icons/HuggingfaceIcon";
 export default function Footer() {
   const { locale } = useI18n();
   const isCn = locale === "cn";
+  // Menu sections configuration
   const menuSections = [
     {
       title: isCn ? "产品" : "Product",
@@ -42,19 +33,23 @@ export default function Footer() {
         { label: "GitHub", href: "https://github.com/HippoxHQ/hippoxOS" },
         { label: "Hugging Face", href: "https://huggingface.co/HippoxHQ" },
         { label: isCn ? "博客" : "Blog", href: "https://hippox.medium.com/" },
-        // { label: isCn ? "API 参考" : "API Reference", href: "#" },
       ],
     },
     {
       title: isCn ? "社区" : "Community",
       links: [
         { label: "Discord", href: "https://discord.gg/R7hrkJRAdE" },
-        { label: "X", href: "https://t.me/hippoxAI" },
+        { label: "X", href: "https://x.com/HippoxAI" },
         {
           label: "Bluesky",
           href: "https://bsky.app/profile/hippoxai.bsky.social",
         },
         { label: "Telegram", href: "https://t.me/hippoxAI" },
+        { label: "YouTube", href: "https://www.youtube.com/@HippoxOS" },
+        {
+          label: "Facebook",
+          href: "https://www.facebook.com/groups/5510896799134952",
+        },
       ],
     },
     {
@@ -70,14 +65,25 @@ export default function Footer() {
       ],
     },
   ];
+  // All social links - matches Header.tsx exactly
   const socialLinks = [
-    { icon: GitHubIcon, href: "https://github.com/HippoxHQ", label: "GitHub" },
+    { icon: XIcon, href: "https://x.com/HippoxAI", label: "X" },
+    {
+      icon: YouTubeIcon,
+      href: "https://www.youtube.com/@HippoxOS",
+      label: "YouTube",
+    },
     {
       icon: HuggingFaceIcon,
       href: "https://huggingface.co/HippoxHQ",
       label: "Hugging Face",
     },
-    { icon: XIcon, href: "https://x.com/HippoxAI", label: "X" },
+    {
+      icon: FacebookIcon,
+      href: "https://www.facebook.com/groups/5510896799134952",
+      label: "Facebook",
+    },
+    { icon: GitHubIcon, href: "https://github.com/HippoxHQ", label: "GitHub" },
     {
       icon: BlueskyIcon,
       href: "https://bsky.app/profile/hippoxai.bsky.social",
@@ -100,6 +106,7 @@ export default function Footer() {
   return (
     <footer className="w-full border-t border-border/40 bg-background/30 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Menu sections grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
           {menuSections.map((section) => (
             <div key={section.title}>
@@ -123,8 +130,10 @@ export default function Footer() {
             </div>
           ))}
         </div>
+        {/* Bottom section with social icons and copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-border/20">
-          <div className="flex items-center gap-3">
+          {/* Social icons - matches Header.tsx order */}
+          <div className="flex items-center gap-3 flex-wrap justify-center">
             {socialLinks.map((social) => {
               const Icon = social.icon;
               return (
@@ -145,6 +154,7 @@ export default function Footer() {
               );
             })}
           </div>
+          {/* Copyright info */}
           <div className="flex flex-col items-center sm:items-end gap-1 text-[10px] text-foreground/35">
             <div className="flex items-center gap-2">
               <span className="font-medium tracking-wide">HippoxOS</span>
