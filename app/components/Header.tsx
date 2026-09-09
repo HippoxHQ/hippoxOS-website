@@ -14,6 +14,7 @@ import { XIcon } from "../icons/XIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { YouTubeIcon } from "../icons/YouTubeIcon";
 import HuggingFaceIcon from "../icons/HuggingfaceIcon";
+import { RedditIcon } from "../icons/RedditIcon"; // Import Reddit icon
 export default function Header() {
   const { locale, setLocale } = useI18n();
   const { theme, toggleTheme } = useTheme();
@@ -77,6 +78,10 @@ export default function Header() {
   };
   const handleFacebookClick = () => {
     window.open("https://www.facebook.com/groups/5510896799134952", "_blank");
+  };
+  // Reddit click handler
+  const handleRedditClick = () => {
+    window.open("https://www.reddit.com/r/Hippox/", "_blank");
   };
   // WeChat popup handlers
   const handleWechatMouseEnter = () => {
@@ -168,6 +173,18 @@ export default function Header() {
               title={isZh ? "加入 Facebook 群组" : "Join Facebook group"}
             >
               <FacebookIcon className="w-4 h-4" />
+            </button>
+          )}
+          {/* Reddit button - visible when width >= 700 */}
+          {windowWidth >= 700 && (
+            <button
+              type="button"
+              onClick={handleRedditClick}
+              className="p-1.5 rounded-lg border border-border hover:border-muted-foreground transition-colors cursor-pointer"
+              aria-label="Reddit"
+              title={isZh ? "加入 Reddit 社区" : "Join Reddit community"}
+            >
+              <RedditIcon className="w-4 h-4" />
             </button>
           )}
           {windowWidth >= 700 && (

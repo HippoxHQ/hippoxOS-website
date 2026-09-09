@@ -9,6 +9,7 @@ import { XIcon } from "../icons/XIcon";
 import { FacebookIcon } from "../icons/FacebookIcon";
 import { YouTubeIcon } from "../icons/YouTubeIcon";
 import HuggingFaceIcon from "../icons/HuggingfaceIcon";
+import { RedditIcon } from "../icons/RedditIcon"; // Import Reddit icon
 export default function Footer() {
   const { locale } = useI18n();
   const isCn = locale === "cn";
@@ -50,6 +51,7 @@ export default function Footer() {
           label: "Facebook",
           href: "https://www.facebook.com/groups/5510896799134952",
         },
+        { label: "Reddit", href: "https://www.reddit.com/r/Hippox/" }, // Add Reddit link
       ],
     },
     {
@@ -102,6 +104,11 @@ export default function Footer() {
       size: 16,
     },
     { icon: Send, href: "https://t.me/hippoxAI", label: "Telegram" },
+    {
+      icon: RedditIcon,
+      href: "https://www.reddit.com/r/Hippox/",
+      label: "Reddit",
+    }, // Add Reddit social link
   ];
   return (
     <footer className="w-full border-t border-border/40 bg-background/30 backdrop-blur-sm">
