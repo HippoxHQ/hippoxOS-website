@@ -25,6 +25,17 @@ const enVideos: VideoItem[] = [
     channelZh: "HippoxOS",
     duration: "1.32",
   },
+  {
+    id: "2",
+    title:
+      "HippoxOS - AI Video&Audio workspace, Turn videos from across the web into your own content library.",
+    titleZh: "HippoxOS - AI 影音工作台，讓全網影片都變成你的內容素材庫",
+    platform: "youtube",
+    embedUrl: "https://www.youtube.com/embed/oUVGXS3poOA?si=avDIYWsKrXdWo5R_",
+    channel: "HippoxOS",
+    channelZh: "HippoxOS",
+    duration: "56",
+  },
 ];
 // Chinese video list - Add new videos here
 const cnVideos: VideoItem[] = [
@@ -37,6 +48,17 @@ const cnVideos: VideoItem[] = [
     channel: "HippoxOS",
     channelZh: "HippoxOS",
     duration: "1.32",
+  },
+  {
+    id: "2",
+    title:
+      "HippoxOS - AI Video&Audio workspace, Turn videos from across the web into your own content library.",
+    titleZh: "HippoxOS - AI 影音工作台，讓全網影片都變成你的內容素材庫",
+    platform: "youtube",
+    embedUrl: "https://www.youtube.com/embed/NUfeDu1-dHU?si=i8vmosph0xybvHmT",
+    channel: "HippoxOS",
+    channelZh: "HippoxOS",
+    duration: "56",
   },
 ];
 const platformLabels = {
