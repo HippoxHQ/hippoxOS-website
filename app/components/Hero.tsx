@@ -5,11 +5,10 @@ import { useState, useEffect, useRef } from "react";
 import {
   Sparkles,
   Download,
-  ChevronRight,
   ArrowUpRight,
   Star,
   GitFork,
-  X,
+  ChevronDown,
 } from "lucide-react";
 import { LinuxIcon } from "../icons/LinuxIcon";
 import { MacOSIcon } from "../icons/MacOSIcon";
@@ -38,6 +37,35 @@ const platformConfig = {
     icon: <LinuxIcon className="w-4 h-4" />,
     assetPattern: "linux",
   },
+};
+// Download packages per platform. {version} is replaced at runtime.
+// The first entry in each array is the default/primary download.
+const platformPackages: Record<string, { label: string; file: string }[]> = {
+  windows: [
+    {
+      label: "Installer (.msi)",
+      file: "hippoxOS_windows_x86_64_v{version}.msi",
+    },
+    {
+      label: "Installer (.exe)",
+      file: "hippoxOS_windows_x86_64_v{version}.exe",
+    },
+  ],
+  macos: [
+    { label: "Intel (.dmg)", file: "hippoxOS_macos_x86_64_v{version}.dmg" },
+    {
+      label: "Apple Silicon (.dmg)",
+      file: "hippoxOS_macos_aarch64_v{version}.dmg",
+    },
+  ],
+  linux: [
+    {
+      label: "AppImage (.AppImage)",
+      file: "hippoxOS_linux_x86_64_v{version}.AppImage",
+    },
+    { label: "Debian (.deb)", file: "hippoxOS_linux_x86_64_v{version}.deb" },
+    { label: "RedHat (.rpm)", file: "hippoxOS_linux_x86_64_v{version}.rpm" },
+  ],
 };
 // GitHub repository URL
 const GITHUB_REPO = "https://github.com/HippoxHQ/hippoxOS";
@@ -71,10 +99,10 @@ export default function Hero() {
   });
   const [version, setVersion] = useState<string>("0.0.0");
   const [loading, setLoading] = useState(true);
-  const [showComingSoon, setShowComingSoon] = useState(false);
-  const [bubblePosition, setBubblePosition] = useState({ x: 0, y: 0 });
+  // Controls the dropdown showing all packages for the active platform
+  const [showPackageMenu, setShowPackageMenu] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const downloadBtnRef = useRef<HTMLAnchorElement>(null);
+  const packageMenuRef = useRef<HTMLDivElement>(null);
   // Fetch GitHub repository data
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -264,35 +292,45 @@ export default function Hero() {
       window.removeEventListener("resize", handleResize);
     };
   }, [isDark]);
-  const currentPlatform = platformConfig[activePlatform];
-  const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Get button position for bubble placement
-    const rect = downloadBtnRef.current?.getBoundingClientRect();
-    if (rect) {
-      setBubblePosition({
-        x: rect.left + rect.width / 2,
-        y: rect.top - 10,
-      });
-    }
-    setShowComingSoon(true);
-    // Auto hide after 2.5 seconds
-    setTimeout(() => {
-      setShowComingSoon(false);
-    }, 2500);
-  };
-  const closeBubble = () => {
-    setShowComingSoon(false);
-  };
-  const getDownloadUrl = (platform: string) => {
-    const fileMap: Record<string, string> = {
-      windows: `hippoxOS_windows_x86_64_v${version}.msi`,
-      macos: `hippoxOS_macos_x86_64_v${version}.dmg`,
-      linux: `hippoxOS_linux_x86_64_v${version}.deb`,
+  // Close package dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        packageMenuRef.current &&
+        !packageMenuRef.current.contains(e.target as Node)
+      ) {
+        setShowPackageMenu(false);
+      }
     };
-    const fileName = fileMap[platform] || "";
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const currentPlatform = platformConfig[activePlatform];
+  const currentPackages = platformPackages[activePlatform];
+  // Build a download URL for a given file template using the latest version.
+  const buildDownloadUrl = (fileTemplate: string) => {
+    const fileName = fileTemplate.replace("{version}", version);
     return `https://github.com/HippoxHQ/hippoxOS/releases/download/v${version}/${fileName}`;
+  };
+  // Primary download link = first package of the active platform.
+  const primaryDownloadUrl = buildDownloadUrl(currentPackages[0].file);
+  const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Let the browser perform a real download. Do NOT preventDefault.
+    // If version is still the placeholder, fall back to the releases page.
+    if (!version || version === "0.0.0") {
+      e.preventDefault();
+      window.open(
+        "https://github.com/HippoxHQ/hippoxOS/releases/latest",
+        "_blank",
+        "noopener,noreferrer",
+      );
+    }
+  };
+  // Switch platform and close any open package dropdown in the same handler
+  // to avoid a setState-in-effect cascading render.
+  const handlePlatformChange = (key: "windows" | "macos" | "linux") => {
+    setActivePlatform(key);
+    setShowPackageMenu(false);
   };
   const artTextColor = isDark ? "#e8edf2" : "#1a1a2e";
   const artLightColor = isDark ? "#a78bfa" : "#4f46e5";
@@ -303,76 +341,6 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
         style={{ display: "block" }}
       />
-      {/* Coming Soon Bubble */}
-      {showComingSoon && (
-        <div
-          className="fixed z-50 animate-in fade-in zoom-in duration-200"
-          style={{
-            left: bubblePosition.x,
-            top: bubblePosition.y,
-            transform: "translate(-50%, -100%)",
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="relative">
-            {/* Bubble arrow */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
-              <div
-                className="w-3 h-3 rotate-45 border-r border-b"
-                style={{
-                  backgroundColor: isDark ? "#1a1a2e" : "#ffffff",
-                  borderColor: isDark
-                    ? "rgba(255,255,255,0.1)"
-                    : "rgba(0,0,0,0.08)",
-                }}
-              />
-            </div>
-            {/* Bubble content */}
-            <div
-              className="px-5 py-3 rounded-xl shadow-2xl border backdrop-blur-sm min-w-[160px] text-center"
-              style={{
-                backgroundColor: isDark
-                  ? "rgba(26, 26, 46, 0.95)"
-                  : "rgba(255, 255, 255, 0.95)",
-                borderColor: isDark
-                  ? "rgba(255,255,255,0.08)"
-                  : "rgba(0,0,0,0.06)",
-                boxShadow: isDark
-                  ? "0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(167, 139, 250, 0.1)"
-                  : "0 20px 60px rgba(0,0,0,0.12), 0 0 40px rgba(79, 70, 229, 0.06)",
-              }}
-            >
-              <button
-                onClick={closeBubble}
-                className="absolute -top-2 -right-2 p-1 rounded-full hover:bg-foreground/10 transition-colors"
-                style={{
-                  backgroundColor: isDark
-                    ? "rgba(255,255,255,0.05)"
-                    : "rgba(0,0,0,0.05)",
-                }}
-              >
-                <X className="w-3 h-3 text-foreground/50" />
-              </button>
-              <div className="flex flex-col items-center gap-1">
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: isDark ? "#e8edf2" : "#1a1a2e" }}
-                >
-                  🚀 {isCn ? "即将推出" : "Coming Soon"}
-                </span>
-                <span
-                  className="text-xs opacity-60"
-                  style={{ color: isDark ? "#a0a0b8" : "#666" }}
-                >
-                  {isCn
-                    ? "本月10-15日上线，敬请期待！"
-                    : "Coming Oct 10-15, stay tuned!"}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-zinc-900/10" />
         <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-indigo-500/5 blur-3xl" />
@@ -476,7 +444,7 @@ export default function Hero() {
                 ).map((key) => (
                   <button
                     key={key}
-                    onClick={() => setActivePlatform(key)}
+                    onClick={() => handlePlatformChange(key)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       activePlatform === key
                         ? "bg-foreground/10 text-foreground border border-foreground/20"
@@ -489,18 +457,58 @@ export default function Hero() {
                 ))}
               </div>
               <div className="flex flex-wrap items-center gap-4">
-                <a
-                  ref={downloadBtnRef}
-                  href="#"
-                  onClick={handleDownloadClick}
-                  className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:bg-foreground/80 transition-all duration-200 shadow-lg shadow-foreground/10 hover:shadow-foreground/20 cursor-pointer"
-                >
-                  <Download className="w-4 h-4" />
-                  <span>
-                    {isCn ? "下载" : "Download"} {currentPlatform.label}
-                  </span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                </a>
+                {/* Download button with split dropdown for multiple packages */}
+                <div className="relative inline-flex" ref={packageMenuRef}>
+                  <a
+                    href={primaryDownloadUrl}
+                    onClick={handleDownloadClick}
+                    className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-l-lg bg-foreground text-background font-medium text-sm hover:bg-foreground/80 transition-all duration-200 shadow-lg shadow-foreground/10 hover:shadow-foreground/20 cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>
+                      {isCn ? "下载" : "Download"} {currentPlatform.label}
+                    </span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setShowPackageMenu((v) => !v)}
+                    aria-label="Show all packages"
+                    className="inline-flex items-center justify-center px-2.5 py-3 rounded-r-lg bg-foreground text-background border-l border-background/20 hover:bg-foreground/80 transition-all duration-200 shadow-lg shadow-foreground/10 cursor-pointer"
+                  >
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${
+                        showPackageMenu ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {showPackageMenu && (
+                    <div
+                      className="absolute left-0 top-full mt-2 min-w-[240px] rounded-lg border shadow-2xl backdrop-blur-sm z-50 overflow-hidden"
+                      style={{
+                        backgroundColor: isDark
+                          ? "#000000"
+                          : "rgba(255, 255, 255, 0.98)",
+                        borderColor: isDark
+                          ? "rgba(255,255,255,0.12)"
+                          : "rgba(0,0,0,0.06)",
+                        boxShadow: isDark
+                          ? "0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(167, 139, 250, 0.25), 0 0 80px rgba(167, 139, 250, 0.1)"
+                          : "0 20px 60px rgba(0,0,0,0.12), 0 0 40px rgba(79, 70, 229, 0.06)",
+                      }}
+                    >
+                      {currentPackages.map((pkg) => (
+                        <a
+                          key={pkg.file}
+                          href={buildDownloadUrl(pkg.file)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground/80 hover:text-foreground hover:bg-foreground/5 transition-colors"
+                        >
+                          <Download className="w-3.5 h-3.5 opacity-60" />
+                          <span>{pkg.label}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <a
                   href="https://hippoxos-docs.vercel.app/en"
                   target="_blank"
