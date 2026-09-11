@@ -17,6 +17,18 @@ interface VideoItem {
 const enVideos: VideoItem[] = [
   {
     id: "1",
+    title:
+      "🎉HippoxOS The Initial Version v0.5.0 Is Now Officially Released.#Hippox #HippoxOS #llm #ai",
+    titleZh:
+      "🎉HippoxOS 初始版本 v0.5.0 現已正式發布. #Hippox #HippoxOS #llm #ai",
+    platform: "youtube",
+    embedUrl: "https://www.youtube.com/embed/99AMkXpNZkE?si=zGXEy3mwfxV-onco",
+    channel: "HippoxOS",
+    channelZh: "HippoxOS",
+    duration: "1.05",
+  },
+  {
+    id: "2",
     title: "HippoxOS - What Does System-Level LLM Control Actually Look Like?",
     titleZh: "HippoxOS - 所謂的「系統級LLM控制」, 實際長什麼樣？",
     platform: "youtube",
@@ -26,7 +38,7 @@ const enVideos: VideoItem[] = [
     duration: "1.32",
   },
   {
-    id: "2",
+    id: "3",
     title:
       "HippoxOS - AI Video&Audio workspace, Turn videos from across the web into your own content library.",
     titleZh: "HippoxOS - AI 影音工作台，讓全網影片都變成你的內容素材庫",
@@ -41,6 +53,18 @@ const enVideos: VideoItem[] = [
 const cnVideos: VideoItem[] = [
   {
     id: "1",
+    title:
+      "🎉HippoxOS The Initial Version v0.5.0 Is Now Officially Released.#Hippox #HippoxOS #llm #ai",
+    titleZh:
+      "🎉HippoxOS 初始版本 v0.5.0 現已正式發布. #Hippox #HippoxOS #llm #ai",
+    platform: "youtube",
+    embedUrl: "https://www.youtube.com/embed/6C_zMgOUJXY?si=8S1S1ep2hnXC7Rae",
+    channel: "HippoxOS",
+    channelZh: "HippoxOS",
+    duration: "1.05",
+  },
+  {
+    id: "2",
     title: "HippoxOS - LLM-Native Operating System Overview",
     titleZh: "HippoxOS - 所謂的「系統級LLM控制」, 實際長什麼樣？",
     platform: "youtube",
@@ -50,7 +74,7 @@ const cnVideos: VideoItem[] = [
     duration: "1.32",
   },
   {
-    id: "2",
+    id: "3",
     title:
       "HippoxOS - AI Video&Audio workspace, Turn videos from across the web into your own content library.",
     titleZh: "HippoxOS - AI 影音工作台，讓全網影片都變成你的內容素材庫",
