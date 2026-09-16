@@ -44,27 +44,27 @@ const platformPackages: Record<string, { label: string; file: string }[]> = {
   windows: [
     {
       label: "Installer (.msi)",
-      file: "hippoxOS_windows_x86_64_v{version}.msi",
+      file: "hippoxOS_windows_x86_64.msi",
     },
     {
       label: "Installer (.exe)",
-      file: "hippoxOS_windows_x86_64_v{version}.exe",
+      file: "hippoxOS_windows_x86_64.exe",
     },
   ],
   macos: [
-    { label: "Intel (.dmg)", file: "hippoxOS_macos_x86_64_v{version}.dmg" },
+    { label: "Intel (.dmg)", file: "hippoxOS_macos_x86_64.dmg" },
     {
       label: "Apple Silicon (.dmg)",
-      file: "hippoxOS_macos_aarch64_v{version}.dmg",
+      file: "hippoxOS_macos_aarch64.dmg",
     },
   ],
   linux: [
     {
       label: "AppImage (.AppImage)",
-      file: "hippoxOS_linux_x86_64_v{version}.AppImage",
+      file: "hippoxOS_linux_x86_64.AppImage",
     },
-    { label: "Debian (.deb)", file: "hippoxOS_linux_x86_64_v{version}.deb" },
-    { label: "RedHat (.rpm)", file: "hippoxOS_linux_x86_64_v{version}.rpm" },
+    { label: "Debian (.deb)", file: "hippoxOS_linux_x86_64.deb" },
+    { label: "RedHat (.rpm)", file: "hippoxOS_linux_x86_64.rpm" },
   ],
 };
 // GitHub repository URL
