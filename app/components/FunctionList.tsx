@@ -1,7 +1,7 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useI18n } from "../providers/I18nProvider";
-// Subsystem data with video backgrounds
+// Subsystem data with gif backgrounds
 const subsystems = [
   {
     id: "general-chat",
@@ -13,7 +13,7 @@ const subsystems = [
       "Natural language interaction with LLM for daily questions, task automation, and knowledge base retrieval.",
     detailZh:
       "通过自然语言与 LLM 深度交互，真正意义上实现对计算机的完全控制 —— 从系统级操作到硬件设备调度，释放计算机 100% 的潜能，让每一条指令都精准执行。",
-    video: "/hippoxOS_General_Demo_1.mp4",
+    video: "/general-conversation-subsystem.gif",
     color: "#818cf8",
   },
   {
@@ -26,7 +26,7 @@ const subsystems = [
       "AI-powered video editing through conversation. Add effects, captions, and export with multi-track support.",
     detailZh:
       "搭载自研 NLE 非线性编辑引擎，支持多轨道剪辑、线性动画、26 种专业转场、15 种滤镜效果、78 种 VFX 视觉特效及 15 种运镜特效，一站式完成从剪辑到导出的全流程视频创作。",
-    video: "/hippoxOS_VideoEditor_Demo_5.mp4",
+    video: "/video-editing-subsystem.gif",
     color: "#818cf8",
   },
   {
@@ -52,7 +52,7 @@ const subsystems = [
       "Real-time market data visualization with candlestick charts, technical indicators, and trend analysis.",
     detailZh:
       "搭载自研时间序列数据图形引擎，原生支持 DSL 分析语言与 OHLCV 金融数据模型，实现毫秒级行情数据可视化、技术指标计算与量化策略回测。",
-    video: "/hippoxOS_Finance_Demo_1.mp4",
+    video: "/financial-data-analysis-subsystem.gif",
     color: "#f59e0b",
   },
   {
@@ -65,7 +65,7 @@ const subsystems = [
       "AI-assisted code writing, refactoring, and review with intelligent auto-completion and diff visualization.",
     detailZh:
       "AI 辅助代码编写、重构与审查，支持智能自动补全和可视化 Diff 对比。",
-    video: "/hippoxOS_CodeEditor_Demo_1.mp4",
+    video: "/code-development-subsystem.gif",
     color: "#34d399",
   },
   {
@@ -91,7 +91,7 @@ const subsystems = [
       "Create and manipulate 3D scenes using natural language. Real-time rendering with Three.js engine.",
     detailZh:
       "基于 Three.js 引擎的实时 3D 创作沙盒，支持 PBR 材质、物理光照、粒子系统与骨骼动画。通过自然语言即可生成、编辑和操控三维场景，所见即所得的实时渲染体验。",
-    video: "/hippoxOS_3D_Demo_1.mp4",
+    video: "/3d-sandbox-subsystem.gif",
     color: "#22d3ee",
   },
   {
@@ -108,47 +108,26 @@ const subsystems = [
     color: "#f472b6",
   },
 ];
-// Media card component with autoplay and dense content
+// Media card component with dense content
 // Card height is fixed at 300px, text shows more lines
 const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
   const { locale } = useI18n();
   const isCn = locale === "cn";
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoError, setVideoError] = useState(false);
-  const isGif = subsystem.video.endsWith(".gif");
-  // Auto-play video when component mounts (skip for gif)
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.play().catch(() => {});
-  }, []);
+  const [mediaError, setMediaError] = useState(false);
   const name = isCn ? subsystem.nameZh : subsystem.name;
   const description = isCn ? subsystem.descriptionZh : subsystem.description;
   const detail = isCn ? subsystem.detailZh : subsystem.detail;
   return (
     <div className="relative group h-[300px] bg-background border border-border/40 rounded-lg cursor-pointer transition-all duration-300 hover:bg-background/80 hover:shadow-xl overflow-hidden">
-      {/* Media background: gif -> img, mp4 -> video */}
+      {/* Media background */}
       <div className="absolute inset-0 w-full h-full">
-        {!videoError ? (
-          isGif ? (
-            <img
-              src={subsystem.video}
-              className="w-full h-full object-cover"
-              alt={name}
-              onError={() => setVideoError(true)}
-            />
-          ) : (
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              muted
-              loop
-              playsInline
-              onError={() => setVideoError(true)}
-            >
-              <source src={subsystem.video} type="video/mp4" />
-            </video>
-          )
+        {!mediaError ? (
+          <img
+            src={subsystem.video}
+            className="w-full h-full object-cover"
+            alt={name}
+            onError={() => setMediaError(true)}
+          />
         ) : (
           <div
             className="w-full h-full bg-gradient-to-br from-background/80 to-background/40"
