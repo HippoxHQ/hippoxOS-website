@@ -30,6 +30,19 @@ const subsystems = [
     color: "#818cf8",
   },
   {
+    id: "pixel-animation",
+    name: "Pixel Animation",
+    nameZh: "像素动画",
+    description: "Pixel Art · Sprite Animation · Frame-accurate",
+    descriptionZh: "像素艺术 · 精灵动画 · 帧级精确",
+    detail:
+      "Built on a proprietary pixel animation engine. Describe actions, frames, loops, palette, and sprite sheets in natural language to generate frame-accurate animations.",
+    detailZh:
+      "基于自研像素动画引擎，用自然语言描述角色动作、帧数、循环行为、调色板与精灵表布局，即可生成帧级精确的像素艺术与精灵动画，无需逐帧手绘。",
+    video: "/Pixel_Demo.gif",
+    color: "#a78bfa",
+  },
+  {
     id: "finance",
     name: "Finance",
     nameZh: "金融分析",
@@ -54,6 +67,19 @@ const subsystems = [
       "AI 辅助代码编写、重构与审查，支持智能自动补全和可视化 Diff 对比。",
     video: "/hippoxOS_CodeEditor_Demo_1.mp4",
     color: "#34d399",
+  },
+  {
+    id: "docker-client",
+    name: "Docker Client",
+    nameZh: "Docker 客户端",
+    description: "Build · Run · Inspect · Manage",
+    descriptionZh: "构建 · 运行 · 检查 · 管理",
+    detail:
+      "Control the Docker client entirely through natural language. Describe runtime, dependencies, ports, volumes, and network—HippoxOS builds, runs, and manages containers.",
+    detailZh:
+      "完全通过自然语言控制 Docker 客户端。描述运行时版本、依赖、端口、卷和网络配置，系统即解析意图并调度 Docker 驱动，完成容器的构建、运行、检查与管理。",
+    video: "/Docker_Demo.gif",
+    color: "#38bdf8",
   },
   {
     id: "3d-sandbox",
@@ -82,14 +108,15 @@ const subsystems = [
     color: "#f472b6",
   },
 ];
-// Video card component with autoplay and dense content
+// Media card component with autoplay and dense content
 // Card height is fixed at 300px, text shows more lines
 const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
   const { locale } = useI18n();
   const isCn = locale === "cn";
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
-  // Auto-play video when component mounts
+  const isGif = subsystem.video.endsWith(".gif");
+  // Auto-play video when component mounts (skip for gif)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -100,19 +127,28 @@ const FunctionCard = ({ subsystem }: { subsystem: (typeof subsystems)[0] }) => {
   const detail = isCn ? subsystem.detailZh : subsystem.detail;
   return (
     <div className="relative group h-[300px] bg-background border border-border/40 rounded-lg cursor-pointer transition-all duration-300 hover:bg-background/80 hover:shadow-xl overflow-hidden">
-      {/* Video background */}
+      {/* Media background: gif -> img, mp4 -> video */}
       <div className="absolute inset-0 w-full h-full">
         {!videoError ? (
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            muted
-            loop
-            playsInline
-            onError={() => setVideoError(true)}
-          >
-            <source src={subsystem.video} type="video/mp4" />
-          </video>
+          isGif ? (
+            <img
+              src={subsystem.video}
+              className="w-full h-full object-cover"
+              alt={name}
+              onError={() => setVideoError(true)}
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              muted
+              loop
+              playsInline
+              onError={() => setVideoError(true)}
+            >
+              <source src={subsystem.video} type="video/mp4" />
+            </video>
+          )
         ) : (
           <div
             className="w-full h-full bg-gradient-to-br from-background/80 to-background/40"
